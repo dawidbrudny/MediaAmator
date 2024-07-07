@@ -1,0 +1,42 @@
+.product {
+    &-list {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        width: 70%;
+        text-align: center;
+        margin: 30px auto;
+        padding: 20px;
+        
+        &-container {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 20px 0;
+
+        }
+        
+        > h2 {
+            flex-basis: 100%;
+            color: rgba(0, 0, 0, 0.7);
+        }
+    }
+
+    &-container {
+        flex-basis: 350px;
+        margin: 20px 10px;
+        box-shadow: 0px 0px 4px gray;
+        padding: 20px 10px;
+    }
+
+    &-image {
+        width: 50%;
+        margin-bottom: 20px;
+    }
+
+    &-info {
+        > * {
+            display: block;
+            margin: 20px 0;
+        }
+    }
+}

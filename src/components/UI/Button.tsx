@@ -1,17 +1,16 @@
-import { 
-    type FC,     
-    type ComponentPropsWithRef,
+import {     
+    type ComponentPropsWithoutRef,
     type ReactNode,
     type MouseEventHandler,
 } from 'react';
 
-type ButtonProps = ComponentPropsWithRef<'button'> & {
+type ButtonProps = ComponentPropsWithoutRef<'button'> & {
     onClick?: () => void | MouseEventHandler<HTMLButtonElement>;
     children: ReactNode;
     to?: string;
 };
 
-const Button: FC<ButtonProps> = ({ onClick, children, ...props }) => {
+const Button = ({ onClick, children, ...props }: ButtonProps) => {
     return (
         <button {...props} onClick={onClick}>{children}</button>
     );
