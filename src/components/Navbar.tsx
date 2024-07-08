@@ -19,7 +19,7 @@ const Navbar = () => {
                     button 
                     button-navbar 
                     shopping-cart'>
-                        <FontAwesomeIcon icon='shopping-cart' /><span></span>
+                        <FontAwesomeIcon icon='shopping-cart' />: 3<span></span>
                     </Button>
                 </section>
             </div>
