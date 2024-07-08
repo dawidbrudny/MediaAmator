@@ -23,9 +23,9 @@
     }
 
     &-container {
-        flex-basis: 31.55%;
-        min-width: 300px;
-        min-height: 420px;
+        flex-basis: 30%;
+        min-width: 250px;
+        min-height: 370px;
         margin: 20px 10px;
         box-shadow: 0px 0px 4px gray;
         padding: 30px 10px;
@@ -43,7 +43,7 @@
     &-info {
         > * {
             display: block;
-            margin: 20px auto;
+            margin: 10px auto;
         }
 
         > h3 {
@@ -51,6 +51,12 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        > strong {
+            width: 50%;
+            background-color: black;
+            color: white;
         }
     }
 }
