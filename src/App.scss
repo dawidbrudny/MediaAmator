@@ -6,8 +6,39 @@
     box-sizing: border-box;
 }
 
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
 html {
     font-family: 'roboto', sans-serif;
+}
+
+body {
+background-color: #c2c2c2;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 70%;
+    text-align: center;
+    margin: 80px auto 0 auto;
+    padding: 10px 20px;
+
+    > .main-container {
+        flex-basis: 100%;
+
+    }
+}
+
+h2 {
+    flex-basis: 100%;
+    color: white;
+    text-shadow: -1.5px 1.5px 1px rgb(0, 0, 0);
+    padding: 25px 0;
 }
 
 @import url('./style/Navbar.scss');
