@@ -1,12 +1,22 @@
-// firebase-config.js
-// Import the functions you need from the SDKs you need
+//  App
 import { initializeApp } from "firebase/app";
 
+//  Firestore, Auth, Storage
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getStorage } from 'firebase/storage';
 import 'firebase/storage';
 
+//  Admin SDK
+import admin from 'firebase-admin';
+import serviceAccount from './mediaamator-779dd-firebase-adminsdk-ulmqk-3dd8dfd358.json';
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount as admin.ServiceAccount),
+  storageBucket: "gs://mediaamator-779dd.appspot.com"
+});
+
+const storageAdmin: admin.storage.Storage = admin.storage();
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -28,4 +38,4 @@ const db = getFirestore(app);
 const auth = getAuth(app);
 const storage = getStorage(app);
 
-export { db, auth, storage };
+export { db, auth, storage, storageAdmin };
