@@ -20,7 +20,7 @@ const Product = ({ image, name, price }: ProductProps) => {
                 <strong>{price.toFixed(2)} PLN</strong>
             </div>
             <Button className='button more-info info'>więcej...</Button>
-            <Button className='button add info'>Do koszyka</Button>
+            <Button className='button def-hover add info'>Do koszyka</Button>
         </section>
     );
 };

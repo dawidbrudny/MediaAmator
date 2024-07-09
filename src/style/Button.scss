@@ -1,7 +1,10 @@
 .button {
     text-align: center;
     letter-spacing: 1px;
+    color: black;
     border-radius: 0;
+    border: 1.5px solid black;
+    padding: 10px 20px;
     transition: .3s ease-in-out;
     cursor: pointer;
 
@@ -9,6 +12,7 @@
         background-color: rgb(150, 0, 0);
         color: white;
         border: 1.5px solid white;
+        padding: 0;
 
         &.login {
             width: 120px;
@@ -34,14 +38,12 @@
     }
 
     &.more-info {
-        width: 80px;
-        height: 30px;
         font-size: 14.5px;
         border: 0;
         background-color: transparent;
         
         &:hover {
-            color: rgb(225, 0, 0);
+            color: rgb(150, 0, 0);
             font-weight: bold;
             letter-spacing: 1px;
         }
@@ -50,18 +52,24 @@
     &.add {
         display: block;
         margin: 5px auto;
-        width: 120px;
-        height: 35px;
-        background-color: white;
-        font-weight: bold;
 
         &:hover {
             background-color: rgb(255, 213, 0);
             color: black;
-            // border: 3px solid black;
             box-shadow: -4px 4px 2px rgb(169, 169, 169);
             letter-spacing: 2px;
-            width: 130px;
         }
+    }
+
+    &.def-hover:hover {
+        background-color: rgb(255, 213, 0);
+        color: black;
+        box-shadow: -4px 4px 2px rgb(169, 169, 169);
+        letter-spacing: 2px;
+        font-weight: bold;
+    }
+
+    &.previous-page {
+        margin-top: 40px;
     }
 }

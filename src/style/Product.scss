@@ -1,14 +1,6 @@
 .product {
     &-list {
-        display: flex;
-        justify-content: center;
-        flex-wrap: wrap;
-        width: 70%;
-        text-align: center;
-        margin: 80px auto 0 auto;
-        padding: 30px 20px;
-        
-        &-container {
+        &.container {
             flex-basis: 100%;
             display: flex;
             flex-wrap: wrap;
@@ -22,7 +14,7 @@
     }
 
     &-container {
-        flex-basis: 30%;
+        flex-basis: calc(33.33% - 20px);
         min-width: 250px;
         min-height: 370px;
         margin: 0 10px 20px 10px;
@@ -33,7 +25,7 @@
 
     &-image {
         vertical-align: middle;
-        height: 100%;
+        height: clamp(130px, 10vw, 150px);
 
         &-container {
             height: 150px;

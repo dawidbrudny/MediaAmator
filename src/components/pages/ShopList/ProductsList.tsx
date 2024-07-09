@@ -8,8 +8,7 @@ type ProductListProps = {
 
 const ProductList = ({ data }: ProductListProps) => {
     return (
-        <>
-            <section className='product-list-container'>
+            <section className='product-list container'>
                 <h2>Lista zakupów</h2>
                 {data.length === 0 && <div className='product no-products'>Brak produktów na stronie</div>}
                 {data.map((product: object) => {
@@ -26,7 +25,6 @@ const ProductList = ({ data }: ProductListProps) => {
                     )
                 })}
             </section>
-        </>
     );
 };
 

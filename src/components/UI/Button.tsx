@@ -15,15 +15,22 @@ type ButtonProps = ComponentPropsWithoutRef<'button'> & {
 const Button = ({ onClick, children, link, previousPage, ...props }: ButtonProps) => {
     const moveBack = useNavigate();
 
-    // Link Button
-    if (link) {
+    if (link) { //  Link Button
         return (
             <Link to={link}><button {...props}>{children}</button></Link>
         )
-    } else if (previousPage) {
+    } else if (previousPage) { //   Previous Page Button
         return (
             <button {...props} onClick={() => moveBack(-1)}>{children}</button>
         );
+    } else if ('type' in props) { //   Submit Button
+        const { type } = props;
+
+            if (type === 'submit') {
+                return (
+                    <button {...props}>{children}</button>
+                );
+            }
     }
 
     return (

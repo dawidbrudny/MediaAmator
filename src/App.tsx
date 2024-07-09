@@ -4,54 +4,33 @@ import { useEffect, useState } from 'react';
 // React Router DOM
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-// Firebase
-import { db } from './Firebase/firebase-config.ts';
-import { collection, getDocs } from 'firebase/firestore';
+import { getProductsData } from './Firebase/getProductsData.ts';
 
 // Components
 import Navbar from './components/Navbar';
 import ProductsList from './components/pages/ShopList/ProductsList.tsx';
 import LoginPanel from './components/pages/LoginPanel/LoginPanel.tsx';
-import { ProductProps } from './components/pages/ShopList/Product.tsx';
 
 // Styles
 import './App.scss';
 import './style/font-awesome-config';
 
 const App = () => {
-    const [data, setData] = useState<Array<object>>([]);
-
-    const getData = async (): Promise<object[]> => {
-        try {
-            const snapshot = await getDocs(collection(db, 'products'));
-            const data: ProductProps[] = snapshot.docs.map(doc => ({
-                id: doc.id,
-                image: doc.data().image,
-                name: doc.data().name,
-                price: doc.data().price
-            }) as ProductProps);
-            return data;
-        } catch (error) {
-            throw new Error(error as string);
-            return [];
-        }
-    };
+    const [productsData, setProductsData] = useState<Array<object>>([]);
 
     useEffect(() => {
-        getData().then(data => setData(data));
+        getProductsData().then(data => setProductsData(data));
     }, []);
     
     return (
         <>
             <Navbar />
             <main>
-                <section className='main-container'>
                 <Routes>
                     <Route path='/' element={<Navigate to='/shoplist' />} />
-                    <Route path='/shoplist' element={<ProductsList data={data} />} />
+                    <Route path='/shoplist' element={<ProductsList data={productsData} />} />
                     <Route path='/login' element={<LoginPanel />} />
                 </Routes>
-                </section>
             </main>
         </>
     );
