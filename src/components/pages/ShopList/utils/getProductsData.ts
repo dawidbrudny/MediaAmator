@@ -1,8 +1,8 @@
 //  Firebase
-import { db } from './firebase-config.ts';
+import { db } from '../../../../firebase/firebase-config.ts';
 import { collection, getDocs } from 'firebase/firestore';
 
-import { ProductProps } from '../components/pages/ShopList/Product.tsx';
+import { ProductProps } from '../Product.tsx';
 
 export async function getProductsData(): Promise<object[]> {
     try {
@@ -16,6 +16,5 @@ export async function getProductsData(): Promise<object[]> {
         return data;
     } catch (error) {
         throw new Error(error as string);
-        return [];
     }
 }

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 // React Router DOM
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import { getProductsData } from './Firebase/getProductsData.ts';
+import { getProductsData } from './components/pages/ShopList/utils/getProductsData';
 
 // Components
 import Navbar from './components/Navbar';
@@ -30,6 +30,7 @@ const App = () => {
                     <Route path='/' element={<Navigate to='/shoplist' />} />
                     <Route path='/shoplist' element={<ProductsList data={productsData} />} />
                     <Route path='/login' element={<LoginPanel />} />
+                    <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </main>
         </>

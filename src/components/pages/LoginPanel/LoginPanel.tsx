@@ -1,32 +1,52 @@
-import { type FormEvent, useRef } from 'react';
-import { loginToPanel } from '../../../Firebase/loginToApp';
+import { useRef, useEffect, useCallback } from 'react';
+
+//  Redux
+import { handleLoginProcess, getLoginStatus } from './utils/authenticationFunctions';
+import { useLoginSelector, useLoginDispatch } from '../../../redux/hooks';
+import { setLoginState } from '../../../redux/loginSlice';
 
 import Button from '../../UI/Button';
+import Input from '../../UI/Input';
+import Form, { FormHandle } from '../../UI/Form';
+import UserPanel from './UserPanel';
 
 const LoginPanel = () => {
-    const email = useRef<HTMLInputElement>(null);
-    const password = useRef<HTMLInputElement>(null);
+    const login = useLoginSelector(state => state.login.isLoggedIn);
+    const dispatch = useLoginDispatch();
+    
+    const loginForm = useRef<FormHandle>(null);
+    const getLoginResponse = useCallback(async () => {
+        getLoginStatus().then(response => dispatch(setLoginState(response)));
+    }, [dispatch]);
 
-    function handleSubmit(e: FormEvent) {
-        e.preventDefault();
-        const emailValue = email.current!.value;
-        const passwordValue = password.current!.value;
-        console.log(emailValue, passwordValue);
+    async function handleSubmit(data: unknown) {
+        const { email, password } = data as { email: string, password: string };
 
-        loginToPanel({ email: emailValue, password: passwordValue });
+        await handleLoginProcess(email, password).then(() => {
+            getLoginResponse();
+        });
     }
+
+    useEffect(() => {
+        getLoginResponse();
+    }, [dispatch, getLoginResponse]);
+
     return (
         <>
         <section>
-            <h2>Logowanie</h2>
-                <form onSubmit={handleSubmit}>
-                    <label htmlFor='email'>E-mail</label>
-                    <input type='email' name='email' id='email' ref={email} />
-                    <label htmlFor='password'>Hasło</label>
-                    <input type='password' name='password' id='password' ref={password} />
-                    <Button className='button def-hover' type='submit'>Zaloguj</Button>
-                </form>
+            <h2>{login ? 'Panel użytkownika' : 'Logowanie'}</h2>
+                {!login ? 
+                (<>
+                <Form onSave={handleSubmit} ref={loginForm}>
+                    <Input type='email' name='email' id='email' label='Email' />
+                    <Input type='password' name='password' id='password' label='Hasło' />
+                    <Button className='button def-hover login' type='submit'>Zaloguj</Button>
+                </Form>
                 <Button className='button def-hover previous-page' previousPage>Powrót</Button>
+                </>) 
+                : 
+                (<UserPanel />)
+                }
         </section>
         </>
     );

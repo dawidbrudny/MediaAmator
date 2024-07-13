@@ -1,9 +1,12 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useLoginSelector } from '../redux/hooks';
 
 import Nav from './UI/Nav';
 import Button from './UI/Button';
 
 const Navbar = () => {
+    const login = useLoginSelector(state => state.login.isLoggedIn);
+
     return (
         <Nav className='navbar'>
             <div className="container">
@@ -16,7 +19,7 @@ const Navbar = () => {
                     login'
                     link='/login'
                     >
-                        Login
+                        {login ? 'Konto' : 'Login'}
                     </Button>
                     <Button className='
                     button 

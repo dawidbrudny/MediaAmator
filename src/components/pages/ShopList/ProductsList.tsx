@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import Product, { ProductProps } from './Product';
 import Container from '../../UI/Container';
 
@@ -7,10 +8,21 @@ type ProductListProps = {
 };
 
 const ProductList = ({ data }: ProductListProps) => {
+    const [loadingInfo, setLoadingInfo] = useState<string>('Loading...');
+
+    function handleLoadingInfo(data: object[]) {
+        setTimeout(() => {
+            if (data.length === 0) setLoadingInfo('Brak produktów')
+        }, 5000)
+    }
+
+    useEffect(() => {
+        handleLoadingInfo(data);
+    }, [data])
+
     return (
             <section className='product-list container'>
-                <h2>Lista zakupów</h2>
-                {data.length === 0 && <div className='product no-products'>Brak produktów na stronie</div>}
+                <h2>{data.length > 0 ? 'Lista produktów' : loadingInfo}</h2>
                 {data.map((product: object) => {
                     const obj = product as ProductProps;
 
