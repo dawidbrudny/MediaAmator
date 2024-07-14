@@ -1,9 +1,10 @@
-import { useNavigate } from "react-router-dom";
-import { handleLogoutProcess, getLoginStatus } from "./utils/authenticationFunctions";
-import { useLoginDispatch } from "../../../redux/hooks";
-import { setLoginState } from "../../../redux/loginSlice";
+import { useNavigate } from 'react-router-dom';
+import { handleLogoutProcess, getLoginStatus } from './utils/authenticationFunctions';
+import { useLoginDispatch } from '../../../redux/hooks';
+import { setLoginState } from '../../../redux/loginSlice';
 
-import Button from "../../UI/Button";
+import styled from 'styled-components';
+import Button from '../../UI/Button';
 
 const UserPanel = () => {
     const navigate = useNavigate();
@@ -18,12 +19,26 @@ const UserPanel = () => {
     return (
         <>
             <p>Witaj w panelu użytkownika</p>
-            <section className='logout-buttons'>
-                <Button className='button def-hover previous-page' previousPage>Powrót</Button>
-                <Button className='button def-hover' onClick={handleClick}>Wyloguj</Button>
-            </section>
+
+            <UserPanelButtons>
+                <Button previousPage>Powrót</Button>
+                <LogoutButton onClick={handleClick}>Wyloguj</LogoutButton>
+            </UserPanelButtons>
         </>
     );
 };
+
+//  --- Styling ---
+const LogoutButton = styled(Button)``;
+const UserPanelButtons = styled.section`
+    display: flex;
+    justify-content: space-between;
+    width: 300px;
+    padding: 30px 0;
+
+    > button:hover {
+        letter-spacing: 1px;
+    }
+`;
 
 export default UserPanel;

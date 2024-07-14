@@ -4,6 +4,8 @@ import {
 } 
 from 'react';
 
+import styled from 'styled-components';
+
 type InputProps = {
     label: string;
     id: string;
@@ -13,10 +15,26 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ label, id, ...props },
     return (
         <>
             <label htmlFor={id}>{label}</label>
-            <input id={id} name={id} {...props} ref={ref} />
+            <InputContainer id={id} name={id} {...props} ref={ref} />
         </>
     );
 });
 
+const InputContainer = styled.input`
+    flex-basis: 70%;
+    margin: 10px 50px;
+    padding: 5px;
+    border: 1.5px solid black;
+    font-weight: bold;
+    font-size: 15px;
+    letter-spacing: 1px;
+    color: rgb(61, 61, 61);
+
+    &:focus {
+        outline: none;
+        border: 2px solid rgb(150, 0, 0);
+        background-color: rgb(255, 243, 215);
+    }
+`;
 
 export default Input;

@@ -1,5 +1,5 @@
 //  Firebase
-import { db } from '../../../../firebase/firebase-config.ts';
+import { db } from '../../../../configs/firebase-config.ts';
 import { collection, getDocs } from 'firebase/firestore';
 
 import { ProductProps } from '../Product.tsx';

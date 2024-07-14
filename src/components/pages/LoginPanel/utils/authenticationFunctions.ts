@@ -1,4 +1,4 @@
-import { auth } from '../../../../firebase/firebase-config';
+import { auth } from '../../../../configs/firebase-config';
 import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth';
 
 export async function getLoginStatus(): Promise<boolean> {

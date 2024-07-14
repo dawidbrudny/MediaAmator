@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
+
+import styled from 'styled-components';
 import Product, { ProductProps } from './Product';
 import Container from '../../UI/Container';
+import ChooseHeader from '../../UI/ChooseHeader';
+
 
 
 type ProductListProps = {
@@ -21,8 +25,9 @@ const ProductList = ({ data }: ProductListProps) => {
     }, [data])
 
     return (
-            <section className='product-list container'>
-                <h2>{data.length > 0 ? 'Lista produktów' : loadingInfo}</h2>
+            <ShopList>
+                <Header as={ChooseHeader} level={2}>{data.length > 0 ? 'Lista produktów' : loadingInfo}</Header>
+                
                 {data.map((product: object) => {
                     const obj = product as ProductProps;
 
@@ -36,8 +41,22 @@ const ProductList = ({ data }: ProductListProps) => {
                         />
                     )
                 })}
-            </section>
+            </ShopList>
     );
 };
+
+//  --- Styling ---
+const ShopList = styled.section`
+    flex-basis: 100%;
+    display: flex;
+    flex-wrap: wrap;
+`;
+
+const Header = styled(Container)`
+    flex-basis: 100%;
+    color: rgb(0, 0, 0);
+    padding: 35px 0;
+    font-family: 'Exo 2', sans-serif;
+`;
 
 export default ProductList;
