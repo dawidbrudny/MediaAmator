@@ -1,18 +1,14 @@
 import { useState, useEffect } from 'react';
+import { getProductsData } from './utils/getProductsData';
 
 import styled from 'styled-components';
 import Product, { ProductProps } from './Product';
 import Container from '../../UI/Container';
 import ChooseHeader from '../../UI/ChooseHeader';
 
-
-
-type ProductListProps = {
-    data: object[];
-};
-
-const ProductList = ({ data }: ProductListProps) => {
+const ProductList = () => {
     const [loadingInfo, setLoadingInfo] = useState<string>('Loading...');
+    const [productsData, setProductsData] = useState<Array<object>>([]);
 
     function handleLoadingInfo(data: object[]) {
         setTimeout(() => {
@@ -21,14 +17,15 @@ const ProductList = ({ data }: ProductListProps) => {
     }
 
     useEffect(() => {
-        handleLoadingInfo(data);
-    }, [data])
+        getProductsData().then(data => setProductsData(data));
+        handleLoadingInfo(productsData);
+    }, [productsData])
 
     return (
             <ShopList>
-                <Header as={ChooseHeader} level={2}>{data.length > 0 ? 'Lista produktów' : loadingInfo}</Header>
+                <Header as={ChooseHeader} level={2}>{productsData.length > 0 ? 'Lista produktów' : loadingInfo}</Header>
                 
-                {data.map((product: object) => {
+                {productsData.map((product: object) => {
                     const obj = product as ProductProps;
 
                     return (
