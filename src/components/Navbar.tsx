@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useLoginSelector } from '../redux/hooks';
+import { useAppSelector } from '../redux/hooks';
 import styled from 'styled-components';
 
 import Nav from './UI/Nav';
@@ -8,7 +8,7 @@ import Button from './UI/Button';
 import Headers from './UI/ChooseHeader';
 
 const Navbar = () => {
-    const login = useLoginSelector(state => state.login.isLoggedIn);
+    const login = useAppSelector(state => state.login.isLoggedIn);
 
     return (
         <StyledNav>
@@ -50,6 +50,7 @@ const NavContainer = styled.section`
     justify-content: space-between;
     align-items: center;
     width: 70%;
+    max-width: 1440px;
     height: 100%;
     margin: 0 auto;
     padding: 0 10px;

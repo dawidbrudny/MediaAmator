@@ -4,7 +4,7 @@ import { collection, getDocs } from 'firebase/firestore';
 
 import { ProductProps } from '../Product.tsx';
 
-export async function getProductsData(): Promise<object[]> {
+export async function getProductsData(): Promise<ProductProps[]> {
     try {
         const snapshot = await getDocs(collection(db, 'products'));
         const data: ProductProps[] = snapshot.docs.map(doc => ({

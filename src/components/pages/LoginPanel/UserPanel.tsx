@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import { handleLogoutProcess, getLoginStatus } from './utils/authenticationFunctions';
-import { useLoginDispatch } from '../../../redux/hooks';
+import { useAppDispatch } from '../../../redux/hooks';
 import { setLoginState } from '../../../redux/loginSlice';
 
 import styled from 'styled-components';
@@ -8,7 +8,7 @@ import Button from '../../UI/Button';
 
 const UserPanel = () => {
     const navigate = useNavigate();
-    const dispatch = useLoginDispatch();
+    const dispatch = useAppDispatch();
     async function handleClick() {
         handleLogoutProcess().then(() => {
             getLoginStatus().then(response => dispatch(setLoginState(response)))

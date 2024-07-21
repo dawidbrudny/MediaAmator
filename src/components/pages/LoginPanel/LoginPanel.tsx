@@ -2,7 +2,7 @@ import { useRef, useEffect, useCallback } from 'react';
 
 //  Redux
 import { handleLoginProcess, getLoginStatus } from './utils/authenticationFunctions';
-import { useLoginSelector, useLoginDispatch } from '../../../redux/hooks';
+import { useAppSelector, useAppDispatch } from '../../../redux/hooks';
 import { setLoginState } from '../../../redux/loginSlice';
 
 import styled from 'styled-components';
@@ -14,10 +14,10 @@ import Form, { FormHandle } from '../../UI/Form';
 import UserPanel from './UserPanel';
 
 const LoginPanel = () => {
-    const login = useLoginSelector(state => state.login.isLoggedIn);
-    const dispatch = useLoginDispatch();
-    
+    const login = useAppSelector(state => state.login.isLoggedIn);
+    const dispatch = useAppDispatch();
     const loginForm = useRef<FormHandle>(null);
+    
     const getLoginResponse = useCallback(async () => {
         getLoginStatus().then(response => dispatch(setLoginState(response)));
     }, [dispatch]);

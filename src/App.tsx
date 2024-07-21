@@ -1,3 +1,8 @@
+// Redux
+import { useAppSelector, useAppDispatch } from './redux/hooks.ts';
+import { getLoginStatusAsync } from './redux/loginSlice.ts';
+import { fetchProducts } from './redux/productsSlice.ts';
+
 // React Router DOM
 import { Routes, Route, Navigate } from 'react-router-dom';
 
@@ -11,8 +16,20 @@ import Main from './components/UI/Main.tsx';
 import { createGlobalStyle } from 'styled-components';
 import { HelmetProvider } from 'react-helmet-async';
 import './configs/font-awesome-config.ts';
+import { useEffect } from 'react';
 
 const App = () => {
+    const dispatch = useAppDispatch();
+    const productsStatus = useAppSelector((state) => state.products.status);
+    
+    useEffect(() => {
+        dispatch(getLoginStatusAsync());
+        if (productsStatus === 'idle') {
+            dispatch(fetchProducts());
+        }
+    }, [dispatch, productsStatus]);
+
+
     return (
         <>
             {/*  --- Helmet, Global Style --- */}

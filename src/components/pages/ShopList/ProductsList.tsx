@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getProductsData } from './utils/getProductsData';
+import { useAppSelector } from '../../../redux/hooks';
 
 import styled from 'styled-components';
 import Product, { ProductProps } from './Product';
@@ -8,43 +8,40 @@ import ChooseHeader from '../../UI/ChooseHeader';
 
 const ProductList = () => {
     const [loadingInfo, setLoadingInfo] = useState<string>('Loading...');
-    const [productsData, setProductsData] = useState<Array<object>>([]);
+    const products = useAppSelector((state) => state.products.products);
 
-    function handleLoadingInfo(data: object[]) {
-        setTimeout(() => {
-            if (data.length === 0) setLoadingInfo('Brak produktów')
-        }, 5000)
-    }
 
     useEffect(() => {
-        getProductsData().then(data => setProductsData(data));
-        handleLoadingInfo(productsData);
-    }, [productsData])
+            setTimeout(() => {
+                if (products.length === 0) setLoadingInfo('Brak produktów')
+            }, 5000);
+    }, [products]);
 
     return (
-            <ShopList>
-                <Header as={ChooseHeader} level={2}>{productsData.length > 0 ? 'Lista produktów' : loadingInfo}</Header>
+        <ShopList>
+            <Header as={ChooseHeader} level={2}>{products.length > 0 ? 'Lista produktów' : loadingInfo}</Header>
                 
-                {productsData.map((product: object) => {
-                    const obj = product as ProductProps;
+            {products.map((product: object) => {
+                const obj = product as ProductProps;
 
-                    return (
-                        <Container
-                        as={Product}
-                        key={obj.name}
-                        image={obj.image}
-                        name={obj.name}
-                        price={obj.price}
-                        />
-                    )
-                })}
-            </ShopList>
+                return (
+                    <Container
+                    as={Product}
+                    key={obj.name}
+                    image={obj.image}
+                    name={obj.name}
+                    price={obj.price}
+                    />
+                )
+            })}
+        </ShopList>
     );
 };
 
 //  --- Styling ---
 const ShopList = styled.section`
     flex-basis: 100%;
+    justify-content: center;
     display: flex;
     flex-wrap: wrap;
 `;

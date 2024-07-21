@@ -15,6 +15,7 @@ const Container = styled.main`
     justify-content: center;
     flex-wrap: wrap;
     width: 70%;
+    max-width: 1440px;
     text-align: center;
     margin: 80px auto;
 `;

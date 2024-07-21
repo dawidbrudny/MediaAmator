@@ -36,6 +36,7 @@ const Product = ({ image, name, price }: ProductProps) => {
 const ProductContainer = styled.section`
     flex-basis: calc(33.33% - 20px);
     min-width: 250px;
+    max-width: 340px;
     min-height: 370px;
     margin: 0 10px 20px 10px;
     background-color: white;
