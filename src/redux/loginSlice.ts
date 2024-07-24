@@ -1,9 +1,12 @@
 // loginSlice.ts
 import { createSlice, createAsyncThunk, type PayloadAction  } from '@reduxjs/toolkit';
 import { getLoginStatus } from '../components/pages/LoginPanel/utils/authenticationFunctions'
+import { getSingleUser } from '../components/pages/LoginPanel/utils/getSingleUser';
+import { type DocumentData } from 'firebase/firestore'; // Import the DocumentData type
 
 interface LoginState {
-  isLoggedIn: boolean | null;
+  isLoggedIn: null | boolean;
+  userData: null | DocumentData;
 }
 
 export const getLoginStatusAsync: ReturnType<typeof createAsyncThunk<boolean>> = createAsyncThunk(
@@ -14,8 +17,17 @@ export const getLoginStatusAsync: ReturnType<typeof createAsyncThunk<boolean>> =
   }
 );
 
+export const getSingleUserAsync: ReturnType<typeof createAsyncThunk<DocumentData | null, string>> = createAsyncThunk(
+  'login/getNickname',
+  async (documentId) => {
+    const response = await getSingleUser(documentId);
+    return response;
+  }
+);
+
 const initialState: LoginState = {
   isLoggedIn: null,
+  userData: null,
 };
 
 export const loginSlice = createSlice({
@@ -28,9 +40,13 @@ export const loginSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(getLoginStatusAsync.fulfilled, (state, action) => {
-      state.isLoggedIn = action.payload;
-    });
+    builder
+      .addCase(getLoginStatusAsync.fulfilled, (state, action) => {
+        state.isLoggedIn = action.payload;
+      })
+      .addCase(getSingleUserAsync.fulfilled, (state, action) => {
+        state.userData = action.payload;
+      });
   },
 });
 

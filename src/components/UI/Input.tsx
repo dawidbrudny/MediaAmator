@@ -7,7 +7,7 @@ from 'react';
 import styled from 'styled-components';
 
 type InputProps = {
-    label: string;
+    label?: string;
     id: string;
 } & ComponentPropsWithRef<'input'>;
 
@@ -21,8 +21,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({ label, id, ...props },
 });
 
 const InputContainer = styled.input`
-    flex-basis: 70%;
-    margin: 10px 50px;
     padding: 5px;
     border: 1.5px solid black;
     font-weight: bold;

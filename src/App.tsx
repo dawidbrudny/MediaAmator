@@ -1,6 +1,6 @@
 // Redux
 import { useAppSelector, useAppDispatch } from './redux/hooks.ts';
-import { getLoginStatusAsync } from './redux/loginSlice.ts';
+import { getLoginStatusAsync, getSingleUserAsync } from './redux/loginSlice.ts';
 import { fetchProducts } from './redux/productsSlice.ts';
 
 // React Router DOM
@@ -10,12 +10,17 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import ProductsList from './components/pages/ShopList/ProductsList.tsx';
 import LoginPanel from './components/pages/LoginPanel/LoginPanel.tsx';
+import AdminPanel from './components/pages/AdminPanel/AdminPanel.tsx';
 import Main from './components/UI/Main.tsx';
 
 // Styles
 import { createGlobalStyle } from 'styled-components';
 import { HelmetProvider } from 'react-helmet-async';
 import './configs/font-awesome-config.ts';
+
+// Firebase
+import { auth } from './configs/firebase-config.ts';
+
 import { useEffect } from 'react';
 
 const App = () => {
@@ -24,11 +29,20 @@ const App = () => {
     
     useEffect(() => {
         dispatch(getLoginStatusAsync());
+
+        const unsubscribe = auth.onAuthStateChanged(currentUser => {
+            if (currentUser) {
+                dispatch(getSingleUserAsync(currentUser.email!));
+                // dispatch(setNickname(userDoc?.nickname));
+            }
+        });
+
         if (productsStatus === 'idle') {
             dispatch(fetchProducts());
         }
-    }, [dispatch, productsStatus]);
 
+        return () => unsubscribe();
+    }, [dispatch, productsStatus]);
 
     return (
         <>
@@ -48,6 +62,7 @@ const App = () => {
                     <Route path='/' element={<Navigate to='/shoplist' />} />
                     <Route path='/shoplist' element={<ProductsList />} />
                     <Route path='/login' element={<LoginPanel />} />
+                    <Route path='/admin' element={<AdminPanel />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </Main>

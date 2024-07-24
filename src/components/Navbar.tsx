@@ -53,7 +53,6 @@ const NavContainer = styled.section`
     max-width: 1440px;
     height: 100%;
     margin: 0 auto;
-    padding: 0 10px;
 `;
 
 const LoginButton = styled(Button)`

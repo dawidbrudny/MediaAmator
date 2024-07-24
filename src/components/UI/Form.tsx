@@ -7,8 +7,6 @@ import {
 } 
 from 'react';
 
-import styled from 'styled-components';
-
 export type FormHandle = {
     clear: () => void;
 }
@@ -32,31 +30,10 @@ const Form = forwardRef<FormHandle, FormProps>(({ onSave, children, ...props }, 
     }
 
     return (
-        <FormContainer ref={formRef} {...props} onSubmit={handleSubmit}>
+        <form ref={formRef} {...props} onSubmit={handleSubmit}>
             {children}
-        </FormContainer>
+        </form>
     );
 });
-
-const FormContainer = styled.form`
-    max-width: 400px;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    background-color: white;
-    padding: 30px 0;
-    border: 1.5px solid black;
-
-    > * {
-        flex-basis: 100%;
-    }
-
-    > button {
-        flex-basis: 30%;
-        width: 50px;
-        height: 35px;
-        margin-top: 20px;
-    }
-`;
 
 export default Form;

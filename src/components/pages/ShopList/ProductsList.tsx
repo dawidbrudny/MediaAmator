@@ -46,11 +46,6 @@ const ShopList = styled.section`
     flex-wrap: wrap;
 `;
 
-const Header = styled(Container)`
-    flex-basis: 100%;
-    color: rgb(0, 0, 0);
-    padding: 35px 0;
-    font-family: 'Exo 2', sans-serif;
-`;
+const Header = styled(Container)``;
 
 export default ProductList;

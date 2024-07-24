@@ -16,10 +16,7 @@ const Product = ({ image, name, price }: ProductProps) => {
     return (
         <ProductContainer>
 
-            <ImageContainer>
-                <ProductImage {...image} />
-            </ImageContainer>
-
+            <ProductImage {...image} />
             <ProductInfo>
                 <Header as={Headers} level={3}>{name}</Header>
                 <Price>{price.toFixed(2)} PLN</Price>
@@ -44,14 +41,9 @@ const ProductContainer = styled.section`
     padding: 30px 10px;
 `;
 
-const ImageContainer = styled.section``;
 const ProductImage = styled.img`
     vertical-align: middle;
     height: clamp(130px, 10vw, 150px);
-
-    > ${ImageContainer} {
-        height: 150px;
-    }
 `;
 
 const Header = styled(Container)``;

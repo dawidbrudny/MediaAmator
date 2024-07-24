@@ -59,6 +59,6 @@ const StyledButton = styled.button`
         color: black;
         box-shadow: -4px 4px 2px rgb(169, 169, 169);
         font-weight: 700;
-        letter-spacing: 2px;
+        letter-spacing: 1px;
     }
 `;
