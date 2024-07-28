@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAppSelector } from '../redux/hooks';
 import styled from 'styled-components';
@@ -9,6 +10,17 @@ import Headers from './UI/ChooseHeader';
 
 const Navbar = () => {
     const login = useAppSelector(state => state.login.isLoggedIn);
+    const [loading, setLoading] = useState(true);
+
+    function showAccountOption() {
+        return login ? 'Konto' : 'Login';
+    }
+
+    useEffect(() => {
+        setTimeout(() => {
+            setLoading(false);
+        }, 500);
+    }, []);
 
     return (
         <StyledNav>
@@ -20,11 +32,11 @@ const Navbar = () => {
 
                 <NavbarButtons>
                     <LoginButton link='/login'>
-                    {login ? 'Konto' : 'Login'}
+                    {!loading ? showAccountOption() : '. . .'}
                     </LoginButton>
-                    <ShoppingCartButton>
+                    <ShoppingCartButton link='/cart'>
                         <FontAwesomeIcon icon='shopping-cart' />
-                        <span>: 4</span>
+                        <span></span>
                     </ShoppingCartButton>
                 </NavbarButtons>
 
@@ -57,7 +69,7 @@ const NavContainer = styled.section`
 
 const LoginButton = styled(Button)`
     width: 120px;
-    height: 35px;
+    min-height: 35px;
     font-size: 14.5px;
     margin-right: 30px;
 `;
@@ -75,7 +87,7 @@ const NavbarButtons = styled.section`
     align-items: center;
     align-self: center;
 
-    > ${ShoppingCartButton}, > * > ${LoginButton} {
+    > * > ${ShoppingCartButton}, > * > ${LoginButton} {
         background-color: rgb(150, 0, 0);
         color: white;
         border: 1.5px solid white;

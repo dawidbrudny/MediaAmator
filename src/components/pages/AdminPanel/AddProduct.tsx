@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { z } from "zod";
 
 //  Firebase
 import { storage, db } from "../../../configs/firebase-config";
@@ -9,9 +10,27 @@ import Form, { FormHandle } from "../../UI/Form";
 import Input from "../../UI/Input";
 import Button from "../../UI/Button";
 
+const fileSchema = z.object({
+    name: z.string().nonempty("Nazwa pliku jest wymagana"),
+    size: z.number().max(2000000, "Plik nie może być większy niż 2MB"), // Przykładowe ograniczenie rozmiaru pliku
+    type: z.string().regex(/image\/(jpeg|png|gif)/, "Dozwolone są tylko pliki graficzne (jpeg, png, gif)")
+});
+
+const addProductSchema = z.object({
+    name: z.string().nonempty({ message: "Nazwa produktu nie może być pusta" }),
+    price: z.string()
+        .nonempty({ message: "Cena nie może być pusta" })
+        .refine((val) => /^[0-9.,\s]+$/.test(val), { message: "Cena może zawierać tylko cyfry, przecinek, kropkę i spacje" })
+        .transform((val) => parseFloat(val.replace(',', '.')))
+        .refine((val) => !isNaN(val) && val > 0, { message: "Cena musi być prawidłową liczbą dodatnią" }),
+});
+
 const AdminPanel = () => {
     const [imageSrc, setImageSrc] = useState<null | string>(null);
     const [image, setImage] = useState<File | null>(null);
+    const [errors, setErrors] = useState<Record<string, string>>({});
+    const [fileErrors, setFileErrors] = useState<string[]>([]);
+
     const fileInputRef = useRef<HTMLInputElement>(null);
     const productForm = useRef<FormHandle>(null);
 
@@ -19,9 +38,25 @@ const AdminPanel = () => {
         fileInputRef.current?.click();
     }
 
+    const validateFile = (file: File) => {
+        const result = fileSchema.safeParse({
+            name: file.name,
+            size: file.size,
+            type: file.type
+        });
+    
+        if (!result.success) {
+            setFileErrors(result.error.errors.map(error => error.message));
+            return false;
+        } else {
+            setFileErrors([]);
+            return true;
+        }
+    };
+
     function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
         const file = e.target.files?.[0];
-        if (file) {
+        if (file && validateFile(file)) {
             const src = URL.createObjectURL(file);
             setImageSrc(src);
             setImage(file);
@@ -30,25 +65,34 @@ const AdminPanel = () => {
 
     async function handleSubmit(data: unknown) {
         if (!image) return;
-        const { name, price } = data as { name: string, price: number };
-        if (!name && !price) return;
-        productForm.current?.clear();
-        setImage(null);
-        setImageSrc(null);
+
+        const { name, price } = data as { name: string, price: string };
+        // return;
+        const result = addProductSchema.safeParse({ name, price });
+        if (!result.success) {
+            const newErrors: Record<string, string> = {};
+            result.error.issues.forEach((issue) => {
+                newErrors[issue.path[0]] = issue.message;
+            });
+            setErrors(newErrors);
+            return;
+        }
+        setErrors({});
+        console.log(Object.keys(errors).length !== 0)
+        if (Object.keys(errors).length !== 0) return;
 
         const docRef = doc(collection(db, 'products'), name);
         const imageRef = ref(storage, `product-images/${name}`);
         const snapshot = await uploadBytes(imageRef, image);
         const imageUrl = await getDownloadURL(snapshot.ref);
-        console.log(productForm.current);
-
+        
         await setDoc(docRef, {
             name: String(name),
-            price: Number(price),
+            price: Number(price.replace(',', '.').replace(/\s/g, '')),
             image: {
                 src: String(imageUrl)
             }
-        });
+        }), window.location.reload();
     }
 
     return (
@@ -56,10 +100,20 @@ const AdminPanel = () => {
             <AddProductForm onSave={handleSubmit} ref={productForm}>
                 {imageSrc ? <ImageContainer src={imageSrc} /> : <ImagePlaceholder />}
                 <ImageInput type='file' ref={fileInputRef} name='image' id='image' onChange={handleFileChange} />
+                {fileErrors.length > 0 && (
+                    <div>
+                        {fileErrors.map((error, index) => (
+                            <Error key={index}>{error}</Error>
+                        ))}
+                    </div>
+                )}
                 <Button type='button' onClick={handleUploadClick}>Prześlij zdjęcie</Button>
-                <Input type='text' name='name' id='name' label='Nazwa produktu' />
-                <Input type='number' name='price' id='price' label='Cena produktu' />
-                <Button type='submit'>Dodaj produkt</Button>
+
+                <ProductInput type='text' name='name' id='name' label='Nazwa produktu' disabled={image ? false : true} />
+                {errors.name && <Error>{errors.name}</Error>}
+                <ProductInput type='text' name='price' id='price' label='Cena produktu' disabled={image ? false : true} />
+                {errors.price && <Error>{errors.price}</Error>}
+                {image && <Button type='submit' disabled={image ? false : true}>Dodaj produkt</Button>}
             </AddProductForm>
         </div>
     );
@@ -75,27 +129,22 @@ const AddProductForm = styled(Form)`
 
     * {
         margin: 5px 0;
-    }
-
-    > :last-child {
-        margin-top: 30px;
-    }
-
-    > label {
         text-align: left;
-    }
-
-    > input {
-        width: 50%;
     }
 
     > button {
         max-width: 170px;
+        margin-top: 20px;
 
         &:hover {
             letter-spacing: 1px;
         }
     }
+`;
+
+const ProductInput = styled(Input)<{ disabled: boolean }>`
+    width: 50%;
+    border: ${(props) => props.disabled ? '1px solid lightgray' : '1px solid black'};
 `;
 
 type ImageContainerProps = {
@@ -125,5 +174,12 @@ const ImagePlaceholder = styled.img`
 const ImageInput = styled(Input)`
     display: none;
 `;
+
+const Error = styled.span`
+    color: rgb(150, 0, 0);
+    font-size: 14px;
+    margin: 3px 0;
+`;
+
 
 export default AdminPanel;

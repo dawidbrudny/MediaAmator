@@ -12,6 +12,7 @@ import ProductsList from './components/pages/ShopList/ProductsList.tsx';
 import LoginPanel from './components/pages/LoginPanel/LoginPanel.tsx';
 import AdminPanel from './components/pages/AdminPanel/AdminPanel.tsx';
 import Main from './components/UI/Main.tsx';
+import Cart from './components/pages/Cart/Cart.tsx';
 
 // Styles
 import { createGlobalStyle } from 'styled-components';
@@ -33,14 +34,12 @@ const App = () => {
         const unsubscribe = auth.onAuthStateChanged(currentUser => {
             if (currentUser) {
                 dispatch(getSingleUserAsync(currentUser.email!));
-                // dispatch(setNickname(userDoc?.nickname));
             }
         });
 
         if (productsStatus === 'idle') {
             dispatch(fetchProducts());
         }
-
         return () => unsubscribe();
     }, [dispatch, productsStatus]);
 
@@ -63,6 +62,7 @@ const App = () => {
                     <Route path='/shoplist' element={<ProductsList />} />
                     <Route path='/login' element={<LoginPanel />} />
                     <Route path='/admin' element={<AdminPanel />} />
+                    <Route path='/cart' element={<Cart />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </Main>

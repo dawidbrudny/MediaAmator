@@ -38,6 +38,9 @@ export const loginSlice = createSlice({
     setLoginState: (state, action: PayloadAction<boolean | null>) => {
       state.isLoggedIn = action.payload;
     },
+    setUserData: (state, action: PayloadAction<null>) => {
+      state.userData = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -50,6 +53,6 @@ export const loginSlice = createSlice({
   },
 });
 
-export const { setLoginState } = loginSlice.actions;
+export const { setLoginState, setUserData } = loginSlice.actions;
 export default loginSlice.reducer;
 export type { LoginState };

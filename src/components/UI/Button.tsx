@@ -52,6 +52,7 @@ const StyledButton = styled.button`
     transition: .3s ease-in-out;
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;
+    user-select: none;
     cursor: pointer;
 
     &:hover {

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAppSelector, useAppDispatch } from '../../../redux/hooks';
 import { setAdminScreen, AdminPages } from '../../../redux/screenSlice'; 
 
-import Screen from '../LoginPanel/Screen/Screen';
+import Screen from '../Screen/Screen';
 import AddProduct from '../AdminPanel/AddProduct';
 import DeleteProduct from '../AdminPanel/DeleteProduct';
 
