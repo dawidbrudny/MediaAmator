@@ -10,6 +10,7 @@ import Headers from './UI/ChooseHeader';
 
 const Navbar = () => {
     const login = useAppSelector(state => state.login.isLoggedIn);
+    const cart = useAppSelector(state => state.cart);
     const [loading, setLoading] = useState(true);
 
     function showAccountOption() {
@@ -36,7 +37,7 @@ const Navbar = () => {
                     </LoginButton>
                     <ShoppingCartButton link='/cart'>
                         <FontAwesomeIcon icon='shopping-cart' />
-                        <span></span>
+                        {cart.quantity > 0 && <span>: {cart.quantity}</span>}
                     </ShoppingCartButton>
                 </NavbarButtons>
 
