@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useAppSelector } from '../redux/hooks';
+import { useAppSelector } from '../../redux/hooks.ts';
 import styled from 'styled-components';
 
-import Nav from './UI/Nav';
-import Container from './UI/Container';
-import Button from './UI/Button';
-import Headers from './UI/ChooseHeader';
+import Nav from './Nav.tsx';
+import Container from './Container.tsx';
+import Button from './Button.tsx';
+import Headers from './ChooseHeader.tsx';
 
 const Navbar = () => {
     const login = useAppSelector(state => state.login.isLoggedIn);

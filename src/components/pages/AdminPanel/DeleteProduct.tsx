@@ -83,7 +83,7 @@ const DeleteProduct = () => {
                     </CustomSelectValue>
                     {isOpen && (
                         <CustomOptions>
-                            {filteredOptions.slice(0, 7).map(option => (
+                            {filteredOptions.slice(0, 8).map(option => (
                             <CustomOption key={option} onClick={() => {
                                 setSelectedOption(option);
                                 setIsOpen(false);

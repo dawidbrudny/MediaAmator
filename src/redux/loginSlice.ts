@@ -7,6 +7,7 @@ import { type DocumentData } from 'firebase/firestore'; // Import the DocumentDa
 interface LoginState {
   isLoggedIn: null | boolean;
   userData: null | DocumentData;
+  redirectAfterLogin: string | null;
 }
 
 export const getLoginStatusAsync: ReturnType<typeof createAsyncThunk<boolean>> = createAsyncThunk(
@@ -28,6 +29,7 @@ export const getSingleUserAsync: ReturnType<typeof createAsyncThunk<DocumentData
 const initialState: LoginState = {
   isLoggedIn: null,
   userData: null,
+  redirectAfterLogin: null,
 };
 
 export const loginSlice = createSlice({
@@ -41,6 +43,9 @@ export const loginSlice = createSlice({
     setUserData: (state, action: PayloadAction<null>) => {
       state.userData = action.payload;
     },
+    setRedirectAfterLogin(state, action: PayloadAction<string | null>) {
+      state.redirectAfterLogin = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -53,6 +58,6 @@ export const loginSlice = createSlice({
   },
 });
 
-export const { setLoginState, setUserData } = loginSlice.actions;
+export const { setLoginState, setUserData, setRedirectAfterLogin } = loginSlice.actions;
 export default loginSlice.reducer;
 export type { LoginState };
