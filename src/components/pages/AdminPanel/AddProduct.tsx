@@ -103,7 +103,7 @@ const AdminPanel = () => {
     <div>
       <AddProductForm onSave={handleSubmit} ref={productForm}>
         {imageSrc ? <ImageContainer src={imageSrc} /> : <ImagePlaceholder />}
-        <ImageInput type="file" ref={fileInputRef} name="image" id="image" onChange={handleFileChange} />
+        <ImageInput type="file" ref={fileInputRef} name="image" id="image" onChange={handleFileChange} required />
         {fileErrors.length > 0 && (
           <div>
             {fileErrors.map((error, index) => (
@@ -115,9 +115,23 @@ const AdminPanel = () => {
           Prześlij zdjęcie
         </Button>
 
-        <ProductInput type="text" name="name" id="name" label="Nazwa produktu" disabled={image ? false : true} />
+        <ProductInput
+          type="text"
+          name="name"
+          id="name"
+          label="Nazwa produktu"
+          disabled={image ? false : true}
+          required
+        />
         {errors.name && <Error>{errors.name}</Error>}
-        <ProductInput type="text" name="price" id="price" label="Cena produktu" disabled={image ? false : true} />
+        <ProductInput
+          type="text"
+          name="price"
+          id="price"
+          label="Cena produktu"
+          disabled={image ? false : true}
+          required
+        />
         {errors.price && <Error>{errors.price}</Error>}
         {image && (
           <Button type="submit" disabled={image ? false : true}>

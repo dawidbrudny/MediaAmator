@@ -18,10 +18,12 @@ const loginSchema = z.object({
 });
 
 const LoginForm = () => {
+  const [isValid, setIsValid] = useState(false);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const loginForm = useRef<FormHandle>(null);
-  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const getLoginResponse = useCallback(async () => {
     getLoginStatus().then((response) => {
@@ -31,6 +33,7 @@ const LoginForm = () => {
 
   async function handleSubmit(data: unknown) {
     const { email, password } = data as { email: string; password: string };
+    setIsValid(false);
 
     const result = loginSchema.safeParse({ email, password });
     if (!result.success) {
@@ -43,7 +46,11 @@ const LoginForm = () => {
     }
     setErrors({});
 
-    await handleLoginProcess(email, password).then(() => {
+    await handleLoginProcess(email, password).then((response) => {
+      if (response === "auth/invalid-credential") {
+        setIsValid(true);
+      }
+
       getLoginResponse();
       loginForm.current?.clear();
     });
@@ -60,11 +67,12 @@ const LoginForm = () => {
   return (
     <Container>
       <LoginFormContainer onSave={handleSubmit} ref={loginForm}>
-        <Input type="email" name="email" id="email" label="Email" />
+        <Input type="email" name="email" id="email" label="Email" required />
         {errors.email && <Error>{errors.email}</Error>}
-        <Input type="password" name="password" id="password" label="Hasło" />
+        <Input type="password" name="password" id="password" label="Hasło" required />
         {errors.password && <Error>{errors.password}</Error>}
         <Button type="submit">Zaloguj</Button>
+        {isValid && <Error>Błędne dane logowania</Error>}
       </LoginFormContainer>
       <UniquePrevButton onClick={handleBackToShopping}>Powrót do zakupów</UniquePrevButton>
     </Container>
@@ -95,7 +103,7 @@ const LoginFormContainer = styled(Form)`
 
   > button {
     flex-basis: 30%;
-    margin-top: 30px;
+    margin: 20px 0 10px 0;
   }
 
   > label {

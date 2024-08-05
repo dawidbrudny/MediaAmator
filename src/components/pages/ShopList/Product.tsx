@@ -63,6 +63,10 @@ const ProductInfo = styled.section`
     margin: 10px auto;
   }
 
+  > h3 {
+    width: 80%;
+  }
+
   > ${Price} {
     width: 50%;
     background-color: black;

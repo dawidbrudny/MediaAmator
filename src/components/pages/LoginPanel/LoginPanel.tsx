@@ -46,7 +46,7 @@ const LoginPanel = () => {
   useEffect(() => {
     setTimeout(() => {
       setLoadingInfo(false);
-    }, 500);
+    }, 700);
     if (login && redirect) {
       dispatch(setRedirectAfterLogin(null));
     }

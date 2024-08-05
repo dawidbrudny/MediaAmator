@@ -62,7 +62,7 @@ const UserPanel = () => {
       <UserPanelContainer>
         <UserNavigation>
           <Nickname as={ChooseHeader} level={3}>
-            {userData?.nickname}
+            {userData?.nickname ? userData.nickname : "- - -"}
           </Nickname>
           <LogoutButton onClick={handleLogoutClick}>Wyloguj</LogoutButton>
           <Menu>

@@ -1,7 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
+import { resetCart } from "../../../redux/cartSlice";
 import { CardElement, useStripe, useElements, PaymentRequestButtonElement } from "@stripe/react-stripe-js";
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from "react-places-autocomplete";
-import { useAppSelector } from "../../../redux/hooks";
+
+import { z } from "zod";
+
 import Container from "../../UI/Container";
 import Headers from "../../UI/ChooseHeader";
 import styled from "styled-components";
@@ -11,15 +15,46 @@ type LatLngLiteral = {
   lng: number;
 };
 
+const paymentSchema = z.object({
+  firstName: z
+    .string()
+    .nonempty({ message: "Imię jest wymagane" })
+    .min(3, { message: "Imię musi zawierać co najmniej 3 znaki" })
+    .regex(/^[a-zA-Z]+$/, { message: "Imię może zawierać tylko litery" }),
+  lastName: z
+    .string()
+    .nonempty({ message: "Nazwisko jest wymagane" })
+    .min(3, { message: "Nazwisko musi zawierać co najmniej 3 znaki" })
+    .regex(/^[a-zA-Z]+$/, { message: "Nazwisko może zawierać tylko litery" }),
+  city: z.string().nonempty({ message: "Miasto jest wymagane" }),
+  street: z.string().nonempty({ message: "Ulica jest wymagana" }),
+  houseNumber: z
+    .string()
+    .nonempty({ message: "Numer domu jest wymagany" })
+    .regex(/^[0-9]+[a-zA-Z]*$/, { message: "Nieprawidłowy numer domu" })
+    .transform((val) => val.toUpperCase())
+    .transform((val) => parseInt(val))
+    .refine((val) => !isNaN(val) && val > 0, { message: "Numer domu musi być prawidłową liczbą dodatnią" }),
+  postalCode: z
+    .string()
+    .nonempty({ message: "Kod pocztowy jest wymagany" })
+    .regex(/^[0-9]{2}-[0-9]{3}$/, { message: "Kod pocztowy musi być w formacie XX-XXX" }),
+  paymentMethod: z.enum(["card", "blik"], { message: "Wybierz metodę płatności" }),
+});
+
 const PaymentForm = () => {
+  const dispatch = useAppDispatch();
   const stripe = useStripe();
   const elements = useElements();
+
   const [error, setError] = useState<string | null>(null);
+  const [zodErrors, setZodErrors] = useState<Record<string, string>>({});
   const [success, setSuccess] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
   const [paymentMethod, setPaymentMethod] = useState<string>("card");
   const [blikCode, setBlikCode] = useState<string>("");
   const [cityLatLng, setCityLatLng] = useState<LatLngLiteral | null>(null);
+  const [paymentRequest, setPaymentRequest] = useState<any>(null);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -27,8 +62,9 @@ const PaymentForm = () => {
     street: "",
     houseNumber: "",
     postalCode: "",
+    paymentMethod: "card",
   });
-  const [paymentRequest, setPaymentRequest] = useState<any>(null);
+
   const login = useAppSelector((state) => state.login.isLoggedIn);
   const cart = useAppSelector((state) => state.cart.quantity);
 
@@ -43,7 +79,6 @@ const PaymentForm = () => {
       const addressComponents = results[0].address_components;
       const latLng = await getLatLng(results[0]);
       setCityLatLng(latLng);
-
       const city = addressComponents.find((component) => component.types.includes("locality"))?.long_name || "";
 
       setFormData((prevData) => ({
@@ -59,8 +94,7 @@ const PaymentForm = () => {
     try {
       const results = await geocodeByAddress(address);
       const addressComponents = results[0].address_components;
-      const street = addressComponents.find((component) => component.types.includes("route"))?.long_name || "";
-      let postalCode = addressComponents.find((component) => component.types.includes("postal_code"))?.long_name || "";
+      let postalCode = addressComponents.find((component) => component.types.includes("postal_code"))?.short_name || "";
 
       if (addressComponents.find((component) => component.types.includes("postal_code_prefix"))) {
         const postalCodePrefix =
@@ -70,7 +104,7 @@ const PaymentForm = () => {
 
       setFormData((prevData) => ({
         ...prevData,
-        street,
+        street: address, // Ustawienie pełnej nazwy ulicy
         postalCode,
       }));
     } catch (error) {
@@ -86,6 +120,7 @@ const PaymentForm = () => {
       street: "",
       houseNumber: "",
       postalCode: "",
+      paymentMethod: "card",
     });
     setBlikCode("");
     setPaymentMethod("card");
@@ -97,6 +132,55 @@ const PaymentForm = () => {
     if (!stripe || !elements) {
       return;
     }
+
+    if (formData.city) {
+      geocodeByAddress(formData.city)
+        .then((results) => getLatLng(results[0]))
+        .then((latLng) => setCityLatLng(latLng))
+        .catch((error) => {
+          console.error("Error fetching city coordinates:", error);
+          if (error === "ZERO_RESULTS") {
+            setZodErrors((prevErrors) => ({
+              ...prevErrors,
+              city: "Nie znaleziono wyników dla podanego miasta. Sprawdź poprawność nazwy miasta.",
+            }));
+          } else {
+            setZodErrors((prevErrors) => ({
+              ...prevErrors,
+              city: "Nieprawidłowe miasto. Dokonaj lepiej wyboru z pomocą podpowiedzi",
+            }));
+          }
+        });
+    }
+
+    if (formData.street) {
+      geocodeByAddress(formData.street).catch((error) => {
+        console.error("Error fetching street coordinates:", error);
+        if (error === "ZERO_RESULTS") {
+          setZodErrors((prevErrors) => ({
+            ...prevErrors,
+            street: "Nie znaleziono wyników dla podanej nazwy ulicy. Sprawdź poprawność nazwy.",
+          }));
+        } else {
+          console.log(error);
+          setZodErrors((prevErrors) => ({
+            ...prevErrors,
+            street: "Nieprawidłowa nazwa ulicy. Dokonaj lepiej wyboru z pomocą podpowiedzi",
+          }));
+        }
+      });
+    }
+
+    const formResult = paymentSchema.safeParse(formData);
+    if (!formResult.success) {
+      const newErrors: Record<string, string> = {};
+      formResult.error.issues.forEach((issue) => {
+        newErrors[issue.path[0]] = issue.message;
+      });
+      setZodErrors(newErrors);
+      return;
+    }
+    setZodErrors({});
 
     if (paymentMethod === "card") {
       const cardElement = elements.getElement(CardElement);
@@ -150,7 +234,7 @@ const PaymentForm = () => {
         "::placeholder": {
           color: "#aab7c4",
         },
-        backgroundColor: "#f8f8f8",
+        backgroundColor: "#fff8db",
         border: "1px solid #ccc",
         padding: "10px",
         borderRadius: "4px",
@@ -163,25 +247,27 @@ const PaymentForm = () => {
   };
 
   useEffect(() => {
-    if (formData.city) {
-      geocodeByAddress(formData.city)
-        .then((results) => getLatLng(results[0]))
-        .then((latLng) => setCityLatLng(latLng))
-        .catch((error) => console.error("Error fetching city coordinates:", error));
+    if (success) {
+      setTimeout(() => {
+        dispatch(resetCart());
+        setSuccess(false);
+      }, 3000);
     }
 
     setTimeout(() => {
       setLoading(false);
     }, 700);
-  }, [formData.city]);
+  }, []);
 
   return (
     <>
       <Header as={Headers} level={2}>
         {loading ? "Loading..." : login ? (cart ? "Płatność" : "Koszyk jest pusty") : "Zaloguj się"}
       </Header>
+
       {login && cart && !loading ? (
         <FormContainer onSubmit={handleSubmit}>
+          {zodErrors.firstName && <ZodErrorMessage>{zodErrors.firstName}</ZodErrorMessage>}
           <Input
             type="text"
             name="firstName"
@@ -190,6 +276,8 @@ const PaymentForm = () => {
             onChange={handleChange}
             required
           />
+
+          {zodErrors.lastName && <ZodErrorMessage>{zodErrors.lastName}</ZodErrorMessage>}
           <Input
             type="text"
             name="lastName"
@@ -198,6 +286,8 @@ const PaymentForm = () => {
             onChange={handleChange}
             required
           />
+
+          {zodErrors.city && <ZodErrorMessage>{zodErrors.city}</ZodErrorMessage>}
           <PlacesAutocomplete
             value={formData.city}
             onChange={(city) => setFormData((prevData) => ({ ...prevData, city }))}
@@ -220,7 +310,7 @@ const PaymentForm = () => {
                   {loading && <div>Ładowanie...</div>}
                   {suggestions
                     .filter((suggestion) => suggestion.types.includes("locality"))
-                    .map((suggestion) => {
+                    .map((suggestion, index) => {
                       const className = suggestion.active ? "suggestion-item--active" : "suggestion-item";
                       const style = suggestion.active
                         ? { backgroundColor: "#fafafa", cursor: "pointer" }
@@ -231,6 +321,7 @@ const PaymentForm = () => {
                             className,
                             style,
                           })}
+                          key={index}
                         >
                           <span>{suggestion.description}</span>
                         </div>
@@ -240,6 +331,8 @@ const PaymentForm = () => {
               </div>
             )}
           </PlacesAutocomplete>
+
+          {zodErrors.street && <ZodErrorMessage>{zodErrors.street}</ZodErrorMessage>}
           <PlacesAutocomplete
             value={formData.street}
             onChange={(street) => setFormData((prevData) => ({ ...prevData, street }))}
@@ -269,7 +362,7 @@ const PaymentForm = () => {
                 />
                 <SuggestionsContainer>
                   {loading && <div>Ładowanie...</div>}
-                  {suggestions.map((suggestion) => {
+                  {suggestions.map((suggestion, index) => {
                     const className = suggestion.active ? "suggestion-item--active" : "suggestion-item";
                     const style = suggestion.active
                       ? { backgroundColor: "#fafafa", cursor: "pointer" }
@@ -280,6 +373,7 @@ const PaymentForm = () => {
                           className,
                           style,
                         })}
+                        key={index}
                       >
                         <span>{suggestion.description}</span>
                       </div>
@@ -289,6 +383,8 @@ const PaymentForm = () => {
               </div>
             )}
           </PlacesAutocomplete>
+
+          {zodErrors.houseNumber && <ZodErrorMessage>{zodErrors.houseNumber}</ZodErrorMessage>}
           <Input
             type="text"
             name="houseNumber"
@@ -298,27 +394,45 @@ const PaymentForm = () => {
             disabled={!formData.street}
             required
           />
-          <Input type="text" name="postalCode" placeholder="Kod pocztowy" value={formData.postalCode} readOnly />
+
+          {zodErrors.postalCode && <ZodErrorMessage>{zodErrors.postalCode}</ZodErrorMessage>}
+          <Input
+            type="text"
+            name="postalCode"
+            placeholder="Kod pocztowy"
+            value={formData.postalCode}
+            onChange={handleChange}
+          />
+
+          {zodErrors.paymentMethod && <ZodErrorMessage>{zodErrors.paymentMethod}</ZodErrorMessage>}
           <PaymentMethodSelector>
             <label>
               <input
                 type="radio"
                 value="card"
                 checked={paymentMethod === "card"}
-                onChange={() => setPaymentMethod("card")}
+                onChange={() => {
+                  setPaymentMethod("card");
+                  setFormData((prevData) => ({ ...prevData, paymentMethod: "card" }));
+                }}
               />
               Karta
             </label>
+
             <label>
               <input
                 type="radio"
                 value="blik"
                 checked={paymentMethod === "blik"}
-                onChange={() => setPaymentMethod("blik")}
+                onChange={() => {
+                  setPaymentMethod("blik");
+                  setFormData((prevData) => ({ ...prevData, paymentMethod: "card" }));
+                }}
               />
               BLIK
             </label>
           </PaymentMethodSelector>
+
           {paymentMethod === "card" && (
             <CardElementContainer>
               <CardElement options={cardElementOptions} />
@@ -341,7 +455,12 @@ const PaymentForm = () => {
             Dokonaj płatności
           </SubmitButton>
           {error && <ErrorMessage>{error}</ErrorMessage>}
-          {success && <SuccessMessage>Płatność zakończona sukcesem!</SuccessMessage>}
+          {success && (
+            <SuccessMessage>
+              Płatność zakończona sukcesem! <br />
+              Czekaj...
+            </SuccessMessage>
+          )}
         </FormContainer>
       ) : null}
     </>
@@ -422,9 +541,13 @@ const ErrorMessage = styled.div`
   font-size: 12px;
 `;
 
+const ZodErrorMessage = styled(ErrorMessage)`
+  margin: 0;
+`;
+
 const SuccessMessage = styled.div`
   color: #bca600;
-  margin-top: 10px;
+  margin: 30px 0 20px 0;
 `;
 
 const SuggestionsContainer = styled.div`

@@ -13,8 +13,13 @@ export async function getLoginStatus(): Promise<boolean> {
     });
 }
 
-export async function handleLoginProcess(email: string, password: string): Promise<void> {
-    await signInWithEmailAndPassword(auth, email, password);
+export async function handleLoginProcess(email: string, password: string): Promise<void | any> {
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+    } catch (error: any) {
+        console.error('Błąd logowania:', error);
+        return error.code;
+    }
 }
 
 export async function handleLogoutProcess(): Promise<void> {
