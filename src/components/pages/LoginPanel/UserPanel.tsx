@@ -12,7 +12,6 @@ import Screen from "../Screen/Screen";
 
 //  Screen pages
 import Settings from "../Screen/pages/Settings";
-import Personal from "../Screen/pages/Personal";
 import Commentary from "../Screen/pages/Commentary";
 import Purchases from "../Screen/pages/Purchases";
 import Contact from "../Screen/pages/Contact";
@@ -40,8 +39,6 @@ const UserPanel = () => {
     switch (page) {
       case "settings":
         return <Settings />;
-      case "personal":
-        return <Personal />;
       case "commentary":
         return <Commentary />;
       case "purchases":
@@ -67,7 +64,6 @@ const UserPanel = () => {
           <LogoutButton onClick={handleLogoutClick}>Wyloguj</LogoutButton>
           <Menu>
             <Option onClick={() => handleOptionClick("settings")}>Ustawienia konta</Option>
-            <Option onClick={() => handleOptionClick("personal")}>Zmień dane</Option>
             <Option onClick={() => handleOptionClick("commentary")}>Komentarze</Option>
             <Option onClick={() => handleOptionClick("purchases")}>Zamówienia</Option>
             <Option onClick={() => handleOptionClick("contact")}>Kontakt</Option>

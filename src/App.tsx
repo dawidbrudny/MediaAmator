@@ -10,6 +10,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/UI/Navbar.tsx";
 import ProductsList from "./components/pages/ShopList/ProductsList.tsx";
 import LoginPanel from "./components/pages/LoginPanel/LoginPanel.tsx";
+import Register from "./components/pages/LoginPanel/Register.tsx";
 import AdminPanel from "./components/pages/AdminPanel/AdminPanel.tsx";
 import Main from "./components/UI/Main.tsx";
 import Cart from "./components/pages/Cart/Cart.tsx";
@@ -71,6 +72,7 @@ const App = () => {
           <Route path="/" element={<Navigate to="/shoplist" />} />
           <Route path="/shoplist" element={<ProductsList />} />
           <Route path="/login" element={<LoginPanel />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/admin" element={<AdminPanel />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<PaymentForm />} />

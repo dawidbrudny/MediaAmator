@@ -12,7 +12,7 @@ import Button from "../../UI/Button";
 
 const fileSchema = z.object({
   name: z.string().nonempty("Nazwa pliku jest wymagana"),
-  size: z.number().max(2000000, "Plik nie może być większy niż 2MB"), // Przykładowe ograniczenie rozmiaru pliku
+  size: z.number().max(2000000, "Plik nie może być większy niż 2MB"),
   type: z.string().regex(/image\/(jpeg|png|gif)/, "Dozwolone są tylko pliki graficzne (jpeg, png, gif)"),
 });
 

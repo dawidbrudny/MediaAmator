@@ -42,6 +42,11 @@ const paymentSchema = z.object({
   paymentMethod: z.enum(["card", "blik"], { message: "Wybierz metodę płatności" }),
 });
 
+const blikCodeSchema = z
+  .string()
+  .nonempty({ message: "Kod BLIK jest wymagany" })
+  .regex(/^[0-9]{6}$/, { message: "Kod BLIK musi składać się z 6 cyfr" });
+
 const PaymentForm = () => {
   const dispatch = useAppDispatch();
   const stripe = useStripe();
@@ -212,11 +217,15 @@ const PaymentForm = () => {
         resetForm();
       }
     } else if (paymentMethod === "blik") {
-      if (!blikCode) {
-        setError("Kod BLIK jest wymagany");
+      // if (!blikCode) {
+      //   setError("Kod BLIK jest wymagany");
+      //   return;
+      // }
+      const blikCodeValidation = blikCodeSchema.safeParse(blikCode);
+      if (!blikCodeValidation.success) {
+        setError(blikCodeValidation.error.issues[0].message);
         return;
       }
-      console.log("BLIK Code:", blikCode);
       setError(null);
       setSuccess(true);
       resetForm();
@@ -257,7 +266,7 @@ const PaymentForm = () => {
     setTimeout(() => {
       setLoading(false);
     }, 700);
-  }, []);
+  }, [success, dispatch]);
 
   return (
     <>
@@ -440,7 +449,7 @@ const PaymentForm = () => {
           )}
           {paymentMethod === "blik" && (
             <BlikCodeInput
-              type="text"
+              type="number"
               placeholder="Wprowadź kod BLIK"
               value={blikCode}
               onChange={(e) => setBlikCode(e.target.value)}
@@ -507,7 +516,11 @@ const BlikCodeInput = styled.input`
   padding: 10px;
   margin-bottom: 20px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+
+  &:focus {
+    outline: none;
+    border: 1.5px solid black;
+  }
 `;
 
 const PaymentRequestButtonContainer = styled.div`
@@ -546,7 +559,7 @@ const ZodErrorMessage = styled(ErrorMessage)`
 `;
 
 const SuccessMessage = styled.div`
-  color: #bca600;
+  color: #645900;
   margin: 30px 0 20px 0;
 `;
 

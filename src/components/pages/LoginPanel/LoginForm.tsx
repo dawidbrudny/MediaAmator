@@ -5,24 +5,26 @@ import { handleLoginProcess, getLoginStatus } from "./utils/authenticationFuncti
 import { useAppDispatch } from "../../../redux/hooks";
 import { setLoginState } from "../../../redux/loginSlice";
 
-import { useNavigate } from "react-router-dom";
-
 import Form, { FormHandle } from "../../UI/Form";
 import Button from "../../UI/Button";
 import Input from "../../UI/Input";
 import styled from "styled-components";
 
 const loginSchema = z.object({
-  email: z.string().email({ message: "Nieprawidłowy adres email" }),
-  password: z.string().min(6, { message: "Hasło musi mieć co najmniej 6 znaków" }),
+  email: z
+    .string()
+    .nonempty({ message: "To pole nie może pozostać puste" })
+    .email({ message: "Nieprawidłowy adres email" }),
+  password: z
+    .string()
+    .nonempty({ message: "To pole nie może pozostać puste" })
+    .min(6, { message: "Hasło musi mieć co najmniej 6 znaków" }),
 });
 
 const LoginForm = () => {
   const [isValid, setIsValid] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const loginForm = useRef<FormHandle>(null);
 
   const getLoginResponse = useCallback(async () => {
@@ -56,31 +58,28 @@ const LoginForm = () => {
     });
   }
 
-  function handleBackToShopping() {
-    navigate("/shopping");
-  }
-
   useEffect(() => {
     getLoginResponse();
   }, [getLoginResponse]);
 
   return (
-    <Container>
+    <LoginContainer>
       <LoginFormContainer onSave={handleSubmit} ref={loginForm}>
+        {isValid && <SignInError>Błędne dane logowania</SignInError>}
         <Input type="email" name="email" id="email" label="Email" required />
         {errors.email && <Error>{errors.email}</Error>}
         <Input type="password" name="password" id="password" label="Hasło" required />
         {errors.password && <Error>{errors.password}</Error>}
+        <RegisterButton link="/register">Zarejestruj się</RegisterButton>
         <Button type="submit">Zaloguj</Button>
-        {isValid && <Error>Błędne dane logowania</Error>}
       </LoginFormContainer>
-      <UniquePrevButton onClick={handleBackToShopping}>Powrót do zakupów</UniquePrevButton>
-    </Container>
+      <UniquePrevButton link="/">Powrót do zakupów</UniquePrevButton>
+    </LoginContainer>
   );
 };
 
 //  --- Styling ---
-const Container = styled.section``;
+const LoginContainer = styled.section``;
 
 const UniquePrevButton = styled(Button)`
   flex-basis: 100%;
@@ -103,7 +102,6 @@ const LoginFormContainer = styled(Form)`
 
   > button {
     flex-basis: 30%;
-    margin: 20px 0 10px 0;
   }
 
   > label {
@@ -116,14 +114,29 @@ const LoginFormContainer = styled(Form)`
   }
 `;
 
+const RegisterButton = styled(Button)`
+  margin: 20px;
+  border: none;
+  padding: 0;
+  background-color: transparent;
+
+  &:hover {
+    background-color: transparent;
+    box-shadow: none;
+    color: rgb(150, 0, 0);
+  }
+`;
+
 const Error = styled.span`
   color: rgb(150, 0, 0);
   font-size: 14px;
   margin: 5px 0;
+`;
 
-  &:last-of-type {
-    margin-bottom: 0;
-  }
+const SignInError = styled(Error)`
+  background-color: black;
+  color: white;
+  padding: 10px 0;
 `;
 
 export default LoginForm;
