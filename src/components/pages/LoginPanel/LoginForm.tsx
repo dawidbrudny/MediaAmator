@@ -1,10 +1,13 @@
+//React
 import { useRef, useState, useEffect, useCallback } from "react";
+import { Link } from "react-router-dom";
+//  Zod
 import { z } from "zod";
 //  Redux
 import { handleLoginProcess, getLoginStatus } from "./utils/authenticationFunctions";
 import { useAppDispatch } from "../../../redux/hooks";
 import { setLoginState } from "../../../redux/loginSlice";
-
+//  Components
 import Form, { FormHandle } from "../../UI/Form";
 import Button from "../../UI/Button";
 import Input from "../../UI/Input";
@@ -70,7 +73,7 @@ const LoginForm = () => {
         {errors.email && <Error>{errors.email}</Error>}
         <Input type="password" name="password" id="password" label="Hasło" required />
         {errors.password && <Error>{errors.password}</Error>}
-        <RegisterButton link="/register">Zarejestruj się</RegisterButton>
+        <RegisterLink to="/register">Zarejestruj się</RegisterLink>
         <Button type="submit">Zaloguj</Button>
       </LoginFormContainer>
       <UniquePrevButton link="/">Powrót do zakupów</UniquePrevButton>
@@ -114,16 +117,13 @@ const LoginFormContainer = styled(Form)`
   }
 `;
 
-const RegisterButton = styled(Button)`
-  margin: 20px;
-  border: none;
-  padding: 0;
-  background-color: transparent;
+const RegisterLink = styled(Link)`
+  margin: 15px;
+  transition: 0.3s ease-in-out;
 
   &:hover {
-    background-color: transparent;
-    box-shadow: none;
     color: rgb(150, 0, 0);
+    letter-spacing: 0.3px;
   }
 `;
 

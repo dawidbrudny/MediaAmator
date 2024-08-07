@@ -395,7 +395,7 @@ const PaymentForm = () => {
 
           {zodErrors.houseNumber && <ZodErrorMessage>{zodErrors.houseNumber}</ZodErrorMessage>}
           <Input
-            type="text"
+            type="number"
             name="houseNumber"
             placeholder="Numer domu"
             value={formData.houseNumber}
@@ -559,8 +559,9 @@ const ZodErrorMessage = styled(ErrorMessage)`
 `;
 
 const SuccessMessage = styled.div`
-  color: #645900;
-  margin: 30px 0 20px 0;
+  color: #7d5e00;
+  font-weight: bold;
+  margin: 20px 0;
 `;
 
 const SuggestionsContainer = styled.div`

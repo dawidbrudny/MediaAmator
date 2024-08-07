@@ -2,13 +2,13 @@ import { useRef, useState } from "react";
 import { z } from "zod";
 
 //  Firebase
-import { storage, db } from "../../../configs/firebase-config";
+import { storage, db } from "../../../../configs/firebase-config";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { collection, doc, setDoc } from "firebase/firestore";
 
-import Form, { FormHandle } from "../../UI/Form";
-import Input from "../../UI/Input";
-import Button from "../../UI/Button";
+import Form, { FormHandle } from "../../../UI/Form";
+import Input from "../../../UI/Input";
+import Button from "../../../UI/Button";
 
 const fileSchema = z.object({
   name: z.string().nonempty("Nazwa pliku jest wymagana"),

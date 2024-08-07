@@ -1,14 +1,14 @@
 import { useRef, useState } from "react";
 import { z } from "zod";
 
-import { db } from "../../../configs/firebase-config";
+import { db } from "../../../../configs/firebase-config";
 import { collection, query, where, getDocs, deleteDoc, doc } from "firebase/firestore";
 import { getStorage, ref, deleteObject } from "firebase/storage";
 
-import { useAppSelector } from "../../../redux/hooks";
-import Form, { type FormHandle } from "../../UI/Form";
-import Button from "../../UI/Button";
-import Input from "../../UI/Input";
+import { useAppSelector } from "../../../../redux/hooks";
+import Form, { type FormHandle } from "../../../UI/Form";
+import Button from "../../../UI/Button";
+import Input from "../../../UI/Input";
 
 const deleteProductSchema = z.object({
   selectedOption: z.string().nonempty("Musisz wybrać produkt do usunięcia"),

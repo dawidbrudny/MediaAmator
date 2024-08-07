@@ -11,6 +11,7 @@ export type Pages =
 export type AdminPages =
 'add-product'
 | 'delete-product'
+| 'users-list'
 ;
 
 
