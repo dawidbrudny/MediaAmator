@@ -8,7 +8,7 @@ import DeleteProduct from "./pages/DeleteProduct";
 import UsersList from "./pages/UsersList";
 
 import Container from "../../UI/Container";
-import ChooseHeader from "../../UI/ChooseHeader";
+import Headers from "../../UI/ChooseHeader";
 
 const AdminPanel = () => {
   const [loadingInfo, setLoadingInfo] = useState<boolean>(true);
@@ -32,7 +32,7 @@ const AdminPanel = () => {
   function handleRenderingComponents(loading: boolean) {
     if (loading) {
       return (
-        <Header as={ChooseHeader} level={2}>
+        <Header as={Headers} level={2}>
           Loading...
         </Header>
       );
@@ -41,12 +41,16 @@ const AdminPanel = () => {
         <>
           {adminStatus === "admin" ? (
             <>
-              <Header as={ChooseHeader} level={2}>
+              <Header as={Headers} level={2}>
                 Panel administratora
               </Header>
 
               <PanelContainer>
                 <AdminNavigation>
+                  <Header as={Headers} level={3}>
+                    Opcje administartora
+                  </Header>
+                  <br />
                   <Menu>
                     <Option onClick={() => handleOptionClick("add-product")}>Dodaj produkt</Option>
                     <Option onClick={() => handleOptionClick("delete-product")}>Usuń produkt</Option>
@@ -58,7 +62,7 @@ const AdminPanel = () => {
               </PanelContainer>
             </>
           ) : (
-            <Header as={ChooseHeader} level={2}>
+            <Header as={Headers} level={2}>
               Brak dostępu
             </Header>
           )}

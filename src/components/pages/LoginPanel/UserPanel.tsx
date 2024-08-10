@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { handleLogoutProcess, getLoginStatus } from "./utils/authenticationFunctions";
 import { useAppSelector, useAppDispatch } from "../../../redux/hooks";
@@ -7,7 +8,7 @@ import { setScreen, Pages } from "../../../redux/screenSlice";
 import styled from "styled-components";
 import Button from "../../UI/Button";
 import Container from "../../UI/Container";
-import ChooseHeader from "../../UI/ChooseHeader";
+import Headers from "../../UI/ChooseHeader";
 import Screen from "../Screen/Screen";
 
 //  Screen pages
@@ -19,6 +20,8 @@ import Contact from "../Screen/pages/Contact";
 const UserPanel = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const banned = useAppSelector((state) => state.login.banned);
   const userData = useAppSelector((state) => state.login.userData);
   const page = useAppSelector((state) => state.screen.page);
 
@@ -54,30 +57,46 @@ const UserPanel = () => {
     dispatch(setScreen(option));
   }
 
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 500);
+  }, []);
+
   return (
     <>
-      <UserPanelContainer>
-        <UserNavigation>
-          <Nickname as={ChooseHeader} level={3}>
-            {userData?.nickname ? userData.nickname : "- - -"}
-          </Nickname>
-          <LogoutButton onClick={handleLogoutClick}>Wyloguj</LogoutButton>
-          <Menu>
-            <Option onClick={() => handleOptionClick("settings")}>Ustawienia konta</Option>
-            <Option onClick={() => handleOptionClick("commentary")}>Komentarze</Option>
-            <Option onClick={() => handleOptionClick("purchases")}>Zamówienia</Option>
-            <Option onClick={() => handleOptionClick("contact")}>Kontakt</Option>
-            {userData?.status === "admin" && (
-              <Option>
-                <Link to="/admin">Panel administratora</Link>
-              </Option>
-            )}
-          </Menu>
-          <Button onClick={handleBackToShopping}>Powrót do zakupów</Button>
-        </UserNavigation>
+      {isLoading ? (
+        <p>Czekaj...</p>
+      ) : (
+        <>
+          {banned ? (
+            <p>Brak dostępu. Jesteś zbanowany.</p>
+          ) : (
+            <UserPanelContainer>
+              <UserNavigation>
+                <Header as={Headers} level={3}>
+                  {userData?.nickname ? userData.nickname : "- - -"}
+                </Header>
+                <LogoutButton onClick={handleLogoutClick}>Wyloguj</LogoutButton>
+                <Menu>
+                  <Option onClick={() => handleOptionClick("settings")}>Ustawienia konta</Option>
+                  <Option onClick={() => handleOptionClick("commentary")}>Komentarze</Option>
+                  <Option onClick={() => handleOptionClick("purchases")}>Zamówienia</Option>
+                  <Option onClick={() => handleOptionClick("contact")}>Kontakt</Option>
+                  {userData?.status === "admin" && (
+                    <Option>
+                      <Link to="/admin">Panel administratora</Link>
+                    </Option>
+                  )}
+                </Menu>
+                <Button onClick={handleBackToShopping}>Powrót do zakupów</Button>
+              </UserNavigation>
 
-        <Screen>{renderPage()}</Screen>
-      </UserPanelContainer>
+              <Screen>{renderPage()}</Screen>
+            </UserPanelContainer>
+          )}
+        </>
+      )}
     </>
   );
 };
@@ -97,7 +116,7 @@ const UserPanelContainer = styled.section`
   }
 `;
 
-const Nickname = styled(Container)``;
+const Header = styled(Container)``;
 const UserNavigation = styled.nav`
   flex-basis: 20%;
   display: flex;

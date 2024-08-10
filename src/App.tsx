@@ -1,6 +1,6 @@
 // Redux
 import { useAppSelector, useAppDispatch } from "./redux/hooks.ts";
-import { getLoginStatusAsync, getSingleUserAsync } from "./redux/loginSlice.ts";
+import { getLoginStatusAsync, getSingleUserAsync, getCurrentUserBanStatusAsync } from "./redux/loginSlice.ts";
 import { fetchProducts } from "./redux/productsSlice.ts";
 
 // React Router DOM
@@ -29,6 +29,7 @@ import { useEffect } from "react";
 const App = () => {
   const dispatch = useAppDispatch();
   const productsStatus = useAppSelector((state) => state.products.status);
+  const login = useAppSelector((state) => state.login.isLoggedIn);
 
   useEffect(() => {
     dispatch(getLoginStatusAsync());
@@ -36,6 +37,9 @@ const App = () => {
     const unsubscribe = auth.onAuthStateChanged((currentUser) => {
       if (currentUser) {
         dispatch(getSingleUserAsync(currentUser.email!));
+        if (login) {
+          dispatch(getCurrentUserBanStatusAsync());
+        }
       }
     });
 
@@ -43,7 +47,7 @@ const App = () => {
       dispatch(fetchProducts());
     }
     return () => unsubscribe();
-  }, [dispatch, productsStatus]);
+  }, [dispatch, login, productsStatus]);
 
   return (
     <>

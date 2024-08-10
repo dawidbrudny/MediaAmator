@@ -13,6 +13,7 @@ const LoginPanel = () => {
   const [loadingInfo, setLoadingInfo] = useState<boolean>(true);
   const login = useAppSelector((state) => state.login.isLoggedIn);
   const redirect = useAppSelector((state) => state.login.redirectAfterLogin);
+  const banned = useAppSelector((state) => state.login.banned);
   const dispatch = useAppDispatch();
 
   function handleRenderingComponents(loading: boolean, login: null | boolean) {
@@ -22,7 +23,7 @@ const LoginPanel = () => {
           Loading...
         </Header>
       );
-    } else if (login && redirect) {
+    } else if (!banned && login && redirect) {
       return (
         <>
           <Header as={ChooseHeader} level={2}>
@@ -44,13 +45,17 @@ const LoginPanel = () => {
   }
 
   useEffect(() => {
+    if (banned === null) {
+      setLoadingInfo(true);
+    }
+
     setTimeout(() => {
       setLoadingInfo(false);
-    }, 700);
+    }, 1000);
     if (login && redirect) {
       dispatch(setRedirectAfterLogin(null));
     }
-  }, []);
+  }, [banned]);
 
   return <>{handleRenderingComponents(loadingInfo, login)}</>;
 };

@@ -2,12 +2,14 @@
 import { createSlice, createAsyncThunk, type PayloadAction  } from '@reduxjs/toolkit';
 import { getLoginStatus } from '../components/pages/LoginPanel/utils/authenticationFunctions'
 import { getSingleUser } from '../components/pages/LoginPanel/utils/getSingleUser';
+import { getBanStatus } from '../components/pages/LoginPanel/utils/getBanStatus';
 import { type DocumentData } from 'firebase/firestore'; // Import the DocumentData type
 
 interface LoginState {
   isLoggedIn: null | boolean;
   userData: null | DocumentData;
   redirectAfterLogin: string | null;
+  banned: null | boolean;
 }
 
 export const getLoginStatusAsync: ReturnType<typeof createAsyncThunk<boolean>> = createAsyncThunk(
@@ -26,10 +28,19 @@ export const getSingleUserAsync: ReturnType<typeof createAsyncThunk<DocumentData
   }
 );
 
+export const getCurrentUserBanStatusAsync: ReturnType<typeof createAsyncThunk<boolean | null> > = createAsyncThunk(
+  'login/getCurrentUserBanStatus',
+  async () => {
+    const banStatus = await getBanStatus();
+    return banStatus;
+  }
+);
+
 const initialState: LoginState = {
   isLoggedIn: null,
   userData: null,
   redirectAfterLogin: null,
+  banned: null,
 };
 
 export const loginSlice = createSlice({
@@ -54,6 +65,9 @@ export const loginSlice = createSlice({
       })
       .addCase(getSingleUserAsync.fulfilled, (state, action) => {
         state.userData = action.payload;
+      })
+      .addCase(getCurrentUserBanStatusAsync.fulfilled, (state, action) => {
+        state.banned = action.payload;
       });
   },
 });

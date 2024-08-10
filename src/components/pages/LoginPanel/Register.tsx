@@ -92,6 +92,7 @@ const Register = () => {
       await setDoc(docRef, {
         nickname: String(nickname),
         status: "user",
+        banned: false,
       }),
         setSuccess(true);
     } catch (error: any) {

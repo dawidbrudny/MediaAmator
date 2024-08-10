@@ -72,6 +72,7 @@ const PaymentForm = () => {
 
   const login = useAppSelector((state) => state.login.isLoggedIn);
   const cart = useAppSelector((state) => state.cart.quantity);
+  const banned = useAppSelector((state) => state.login.banned);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -255,6 +256,15 @@ const PaymentForm = () => {
     },
   };
 
+  function handleInfo() {
+    if (loading) return "Loading...";
+    if (banned) return "Brak dostępu";
+    if (login) {
+      if (cart) return "Płatność";
+      else return "Koszyk jest pusty";
+    } else return "Zaloguj się";
+  }
+
   useEffect(() => {
     if (success) {
       setTimeout(() => {
@@ -265,16 +275,16 @@ const PaymentForm = () => {
 
     setTimeout(() => {
       setLoading(false);
-    }, 700);
+    }, 2000);
   }, [success, dispatch]);
 
   return (
     <>
       <Header as={Headers} level={2}>
-        {loading ? "Loading..." : login ? (cart ? "Płatność" : "Koszyk jest pusty") : "Zaloguj się"}
+        {handleInfo()}
       </Header>
 
-      {login && cart && !loading ? (
+      {login && cart && !loading && !banned ? (
         <FormContainer onSubmit={handleSubmit}>
           {zodErrors.firstName && <ZodErrorMessage>{zodErrors.firstName}</ZodErrorMessage>}
           <Input
