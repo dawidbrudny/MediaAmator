@@ -40,6 +40,11 @@ const StyledH1 = styled.h1`
   > span {
     color: rgb(255, 213, 0);
   }
+
+  @media (max-width: 1000px) {
+    width: 100%;
+    text-align: center;
+  }
 `;
 
 const StyledH2 = styled.h2`

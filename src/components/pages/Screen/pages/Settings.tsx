@@ -211,6 +211,14 @@ const FormConatiner = styled(Form)`
   > button {
     margin: 20px 0;
   }
+
+  > input {
+    width: 70%;
+
+    @media (max-width: 700px) {
+      width: 100%;
+    }
+  }
 `;
 
 const Error = styled.span`

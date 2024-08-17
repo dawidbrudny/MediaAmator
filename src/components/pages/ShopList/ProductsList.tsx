@@ -76,7 +76,7 @@ const ProductList = () => {
 
   return (
     <>
-      <ShopList style={{ justifyContent: currentProducts.length < 3 ? "center" : "flex-start" }}>
+      <ShopList products={currentProducts}>
         <Header as={ChooseHeader} level={2}>
           {products.length > 0 ? "Lista produktów" : loadingInfo}
         </Header>
@@ -104,14 +104,22 @@ const ProductList = () => {
 };
 
 //  --- Styling ---
-const ShopList = styled.section`
+type ShopListProps = {
+  products: object[];
+};
+const ShopList = styled.section<ShopListProps>`
   flex-basis: 100%;
   max-width: 1080px;
   display: flex;
   flex-wrap: wrap;
+  justify-content: ${(props) => (props.products.length > 3 ? "flex-start" : "center")};
 
   * {
     align-items: center;
+  }
+
+  @media (max-width: 1200px) {
+    justify-content: center;
   }
 `;
 

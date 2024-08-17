@@ -89,7 +89,7 @@ const UserPanel = () => {
                     </Option>
                   )}
                 </Menu>
-                <Button onClick={handleBackToShopping}>Powrót do zakupów</Button>
+                <GoBackButton onClick={handleBackToShopping}>Powrót do zakupów</GoBackButton>
               </UserNavigation>
 
               <Screen>{renderPage()}</Screen>
@@ -102,20 +102,9 @@ const UserPanel = () => {
 };
 
 //  --- Styling ---
+
 const LogoutButton = styled(Button)``;
-
-const UserPanelContainer = styled.section`
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-
-  > * {
-    border: 1.5px solid black;
-    background-color: white;
-  }
-`;
-
+const GoBackButton = styled(Button)``;
 const Header = styled(Container)``;
 const UserNavigation = styled.nav`
   flex-basis: 20%;
@@ -125,7 +114,6 @@ const UserNavigation = styled.nav`
   min-width: 300px;
   max-height: 450px;
   padding: 50px 0 30px 0;
-  margin-right: 40px;
 
   > :first-child {
     margin: 0;
@@ -147,7 +135,84 @@ const Menu = styled.ul`
 
   ${Option}:hover {
     color: rgb(150, 0, 0);
-    font-weight: bold;
+  }
+`;
+
+const UserPanelContainer = styled.section`
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  > * {
+    border: 1.5px solid black;
+    background-color: white;
+  }
+
+  @media (max-width: 1650px) {
+    justify-content: center;
+
+    > * {
+      flex-basis: 100%;
+    }
+
+    > ${UserNavigation} {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 30px;
+      padding: 20px 50px;
+
+      @media (max-width: 1100px) {
+        flex-basis: 40%;
+        padding: 30px 0;
+      }
+
+      > ${LogoutButton} {
+        width: 110px;
+        order: 1;
+
+        @media (max-width: 1100px) {
+          order: 0;
+          margin: 10px 80px 0 80px;
+        }
+      }
+
+      > ${GoBackButton} {
+        width: 200px;
+        order: 2;
+      }
+
+      > button {
+        margin: 0 10px;
+      }
+
+      > ${Menu} {
+        display: flex;
+        flex-basis: 100%;
+        max-width: 600px;
+        min-width: 500px;
+        margin: 7px;
+
+        > ${Option} {
+          flex-grow: 1;
+          border-right: 1px solid black;
+
+          &:last-child {
+            border-right: none;
+          }
+        }
+
+        @media (max-width: 1100px) {
+          flex-direction: column;
+
+          > ${Option} {
+            border-right: none;
+            padding: 0;
+          }
+        }
+      }
+    }
   }
 `;
 

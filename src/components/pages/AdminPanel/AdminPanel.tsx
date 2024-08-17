@@ -9,6 +9,7 @@ import UsersList from "./pages/UsersList";
 
 import Container from "../../UI/Container";
 import Headers from "../../UI/ChooseHeader";
+import styled from "styled-components";
 
 const AdminPanel = () => {
   const [loadingInfo, setLoadingInfo] = useState<boolean>(true);
@@ -50,7 +51,6 @@ const AdminPanel = () => {
                   <Header as={Headers} level={3}>
                     Opcje administartora
                   </Header>
-                  <br />
                   <Menu>
                     <Option onClick={() => handleOptionClick("add-product")}>Dodaj produkt</Option>
                     <Option onClick={() => handleOptionClick("delete-product")}>Usuń produkt</Option>
@@ -85,7 +85,39 @@ const AdminPanel = () => {
 };
 
 //  --- Stytling ---
-import styled from "styled-components";
+
+const AdminNavigation = styled.nav`
+  flex-basis: 20%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 300px;
+  max-height: 300px;
+  padding: 50px 0 30px 0;
+
+  * {
+    margin: 10px 0;
+  }
+`;
+
+const Option = styled.li``;
+const Menu = styled.ul`
+  list-style: none;
+
+  ${Option} {
+    cursor: pointer;
+  }
+
+  ${Option}:hover {
+    color: rgb(150, 0, 0);
+  }
+
+  ${Option}:first-child {
+    margin: 0;
+  }
+`;
+
+const Header = styled(Container)``;
 
 const PanelContainer = styled.section`
   width: 100%;
@@ -97,42 +129,49 @@ const PanelContainer = styled.section`
     border: 1.5px solid black;
     background-color: white;
   }
-`;
 
-const AdminNavigation = styled.nav`
-  flex-basis: 20%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 300px;
-  max-height: 300px;
-  padding: 50px 0 30px 0;
-  margin-right: 40px;
+  @media (max-width: 1650px) {
+    justify-content: center;
 
-  * {
-    margin: 10px 0;
+    > * {
+      flex-basis: 100%;
+    }
+
+    > ${AdminNavigation} {
+      flex-direction: row;
+      justify-content: space-around;
+      padding: 10px;
+      margin-bottom: 30px;
+
+      @media (max-width: 1000px) {
+        flex-basis: 40%;
+        flex-direction: column;
+
+        ${Menu} {
+          flex-direction: column;
+        }
+      }
+    }
+
+    > ${AdminNavigation} > ${Menu} {
+      display: flex;
+
+      ${Option} {
+        margin: 0;
+        padding: 0 15px;
+        border-right: 1px solid black;
+
+        &:last-child {
+          border-right: none;
+        }
+
+        @media (max-width: 1000px) {
+          border-right: none;
+          margin: 5px 0;
+        }
+      }
+    }
   }
 `;
-
-const Option = styled.li``;
-const Menu = styled.ul`
-  list-style: none;
-  margin: 0;
-
-  ${Option} {
-    cursor: pointer;
-  }
-
-  ${Option}:hover {
-    color: rgb(150, 0, 0);
-    font-weight: bold;
-  }
-
-  ${Option}:first-child {
-    margin: 0;
-  }
-`;
-
-const Header = styled(Container)``;
 
 export default AdminPanel;

@@ -62,7 +62,7 @@ const DeleteProduct = () => {
               setSearchTerm("");
             }}
           >
-            <Input
+            <InputForDeleteProduct
               id="search-product"
               type="text"
               value={selectedOption ? selectedOption : searchTerm}
@@ -145,6 +145,10 @@ const CustomOption = styled.div`
   &:hover {
     background-color: rgb(255, 243, 215);
   }
+`;
+
+const InputForDeleteProduct = styled(Input)`
+  min-width: 200px;
 `;
 
 const Error = styled.span`

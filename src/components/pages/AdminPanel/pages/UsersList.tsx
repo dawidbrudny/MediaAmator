@@ -53,27 +53,23 @@ const UsersList = () => {
         Lista użytkowników
       </Header>
       <List>
-        {users.map((user) => (
-          <>
-            {user.status === "admin" ? null : (
-              <>
-                <li key={user.id}>
-                  <div>
-                    <span>{user.id}</span>
-                    <span>{user.nickname}</span>
-                    <span>
-                      Status: <b>{user.banned === true ? "zbanowany" : "normalny"}</b>
-                    </span>
-                    <UserButton onClick={() => handleBanUser(user.id, user.banned)}>
-                      {user.banned ? "Odbanuj" : "Zbanuj"}
-                    </UserButton>
-                  </div>
-                </li>
-                <hr />
-              </>
-            )}
-          </>
-        ))}
+        {users.map((user, index) =>
+          user.status === "admin" ? null : (
+            <li key={index}>
+              <div>
+                <span>{user.id}</span>
+                <span>{user.nickname}</span>
+                <span>
+                  Status: <b>{user.banned === true ? "zbanowany" : "normalny"}</b>
+                </span>
+                <UserButton onClick={() => handleBanUser(user.id, user.banned)}>
+                  {user.banned ? "Odbanuj" : "Zbanuj"}
+                </UserButton>
+              </div>
+              <hr />
+            </li>
+          )
+        )}
       </List>
     </>
   );
@@ -83,22 +79,39 @@ const UsersList = () => {
 const Header = styled(Container)``;
 
 const List = styled.ol`
-  margin-top: 30px;
+  margin-top: 20px;
 
   > li {
-    text-align: left;
-    padding: 5px 10px;
     padding: 15px;
+
+    > hr {
+      margin: 20px 0;
+    }
+
+    @media (max-width: 1200px) {
+      width: 30%;
+      min-width: 200px;
+      margin: 0 auto;
+    }
 
     > div {
       display: flex;
       justify-content: space-between;
       align-items: center;
 
+      @media (max-width: 1200px) {
+        flex-direction: column;
+      }
+
       > span {
         flex-basis: 25%;
         text-align: center;
         border-left: 1px solid black;
+
+        @media (max-width: 1200px) {
+          border: 0;
+          padding: 5px 0;
+        }
 
         &:first-child {
           text-align: left;
@@ -116,6 +129,10 @@ const UserButton = styled(Button)`
 
   &:hover {
     box-shadow: none;
+  }
+
+  @media (max-width: 1200px) {
+    margin-top: 10px;
   }
 `;
 

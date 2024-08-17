@@ -9,6 +9,7 @@ import { collection, doc, setDoc } from "firebase/firestore";
 import Form, { FormHandle } from "../../../UI/Form";
 import Input from "../../../UI/Input";
 import Button from "../../../UI/Button";
+import styled from "styled-components";
 
 const fileSchema = z.object({
   name: z.string().nonempty("Nazwa pliku jest wymagana"),
@@ -144,7 +145,6 @@ const AdminPanel = () => {
 };
 
 //  --- Styling ---
-import styled from "styled-components";
 
 const AddProductForm = styled(Form)`
   display: flex;
@@ -167,7 +167,8 @@ const AddProductForm = styled(Form)`
 `;
 
 const ProductInput = styled(Input)<{ disabled: boolean }>`
-  width: 50%;
+  width: 100%;
+  min-width: 200px;
   border: ${(props) => (props.disabled ? "1px solid lightgray" : "1px solid black")};
 `;
 
@@ -193,6 +194,11 @@ const ImagePlaceholder = styled.img`
   background-image: url(${src});
   background-size: cover;
   background-position: center;
+
+  @media (max-width: 700px) {
+    width: 200px;
+    height: 150px;
+  }
 `;
 
 const ImageInput = styled(Input)`

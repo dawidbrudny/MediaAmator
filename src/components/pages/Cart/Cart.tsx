@@ -100,6 +100,10 @@ const Item = styled.div`
   width: 100%;
   max-width: 1080px;
 
+  @media (max-width: 800px) {
+    flex-direction: column;
+  }
+
   > * {
     flex-basis: 33%;
   }
@@ -107,6 +111,10 @@ const Item = styled.div`
   > div > h3 {
     width: 100%;
     white-space: pre-wrap;
+
+    @media (max-width: 800px) {
+      margin-top: 20px;
+    }
   }
 
   > div:last-child {
