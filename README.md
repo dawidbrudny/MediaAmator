@@ -10,10 +10,8 @@
 * [Features](#features)
 * [Screenshots](#screenshots)
 * [Project Status](#project-status)
+* [Usage](#usage)
 * [Room for Improvement](#room-for-improvement)
-* [Acknowledgements](#acknowledgements)
-* [Contact](#contact)
-<!-- * [License](#license) -->
 
 
 ## General Information
@@ -44,6 +42,15 @@ List the ready features here:
 
 ## Project Status
 Project is: _in progress_
+
+
+## Usage
+If you want to test this app you can click a link above that provides you to live demo version hosted on Firebase Hosting. You don't need to create new user by registration. There is a
+test user which you can use to see what happens after signing in to application:
+
+Test user:
+- login: user@mediaamator.pl
+- password: user-amator
 
 
 ## Room for Improvement
