@@ -71,7 +71,7 @@ const AdminPanel = () => {
     if (!image) return;
 
     const { name, price } = data as { name: string; price: string };
-    // return;
+
     const result = addProductSchema.safeParse({ name, price });
     if (!result.success) {
       const newErrors: Record<string, string> = {};
@@ -185,7 +185,8 @@ const ImageContainer = styled.img<ImageContainerProps>`
   background-position: center;
 `;
 
-const src = "../../../../../../assets/image-placeholder.jpg";
+const src =
+  "https://firebasestorage.googleapis.com/v0/b/mediaamator-779dd.appspot.com/o/other-images%2Fimage-placeholder.jpg?alt=media&token=fad2cb81-6ab1-4e68-abcc-18abf8a31537";
 const ImagePlaceholder = styled.img`
   display: block;
   width: 250px;
