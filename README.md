@@ -38,7 +38,7 @@ List the ready features here:
 
 
 ## Screenshots
-![Example screenshot](https://firebasestorage.googleapis.com/v0/b/mediaamator-779dd.appspot.com/o/mediaamator-screen.jpg?alt=media&token=5a5d2135-d4fc-4668-bd01-4d683e40015c)
+![Example screenshot](https://firebasestorage.googleapis.com/v0/b/mediaamator-779dd.appspot.com/o/other-images%2Fmediaamator-screen.jpg?alt=media&token=64c03e08-c5f9-4205-b59e-1b213fca84aa)
 
 ## Project Status
 Project is: _in progress_
