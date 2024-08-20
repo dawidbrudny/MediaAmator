@@ -24,3 +24,6 @@ dist-ssr
 *.sln
 *.sw?
 src/Firebase/mediaamator-779dd-firebase-adminsdk-ulmqk-3dd8dfd358.json
+.firebase
+firebase.json
+.firebaserc

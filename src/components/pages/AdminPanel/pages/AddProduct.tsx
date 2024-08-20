@@ -9,6 +9,7 @@ import { collection, doc, setDoc } from "firebase/firestore";
 import Form, { FormHandle } from "../../../UI/Form";
 import Input from "../../../UI/Input";
 import Button from "../../../UI/Button";
+import placeHolder from "../../../../../images/image-placeholder.jpg";
 import styled from "styled-components";
 
 const fileSchema = z.object({
@@ -185,14 +186,12 @@ const ImageContainer = styled.img<ImageContainerProps>`
   background-position: center;
 `;
 
-const src =
-  "https://firebasestorage.googleapis.com/v0/b/mediaamator-779dd.appspot.com/o/other-images%2Fimage-placeholder.jpg?alt=media&token=fad2cb81-6ab1-4e68-abcc-18abf8a31537";
 const ImagePlaceholder = styled.img`
   display: block;
   width: 250px;
   height: 200px;
   border: 1.5px solid black;
-  background-image: url(${src});
+  background-image: url(${placeHolder});
   background-size: cover;
   background-position: center;
 

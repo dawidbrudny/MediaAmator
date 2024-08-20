@@ -59,7 +59,7 @@ const PaymentForm = () => {
   const [paymentMethod, setPaymentMethod] = useState<string>("card");
   const [blikCode, setBlikCode] = useState<string>("");
   const [cityLatLng, setCityLatLng] = useState<LatLngLiteral | null>(null);
-  const [paymentRequest, setPaymentRequest] = useState<any>(null);
+
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -69,6 +69,8 @@ const PaymentForm = () => {
     postalCode: "",
     paymentMethod: "card",
   });
+
+  const paymentRequest = null;
 
   const login = useAppSelector((state) => state.login.isLoggedIn);
   const cart = useAppSelector((state) => state.cart.quantity);
