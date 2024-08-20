@@ -1,4 +1,4 @@
-# MediaAmator - store app
+# MediaAmator - Online store app (React, Typescript, Vite, Firebase)
 > Store app created with React, TypeScript, Vite and Firebase technologies.
 > The application also includes login and registration functions plus an administrator panel.
 > 
