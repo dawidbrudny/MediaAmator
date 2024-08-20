@@ -1,5 +1,5 @@
 # MediaAmator - store app
-> Store app created with React, TypeScript and Firebase technologies.
+> Store app created with React, TypeScript, Vite and Firebase technologies.
 > The application also includes login and registration functions plus an administrator panel.
 > 
 > Live demo [_here_](https://mediaamator-779dd.web.app/). <!-- If you have the project hosted somewhere, include the link here. -->
