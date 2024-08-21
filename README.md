@@ -52,10 +52,6 @@ Test user:
 - login: user@mediaamator.pl
 - password: user-amator
 
-Admin:
-- login: admin@mediaamator.pl
-- password: elden-lord
-
 
 ## Room for Improvement
 The application requires some improvements and the addition of some content and functions. 
