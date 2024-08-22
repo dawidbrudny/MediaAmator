@@ -65,6 +65,8 @@ Room for improvement:
 - App should be more adapted to mobile devices.
 - Add pages for given products that will contain more information about them.
 
+> Possibility to adding comments was added, but I'm still working on other questions relevant to it.
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
