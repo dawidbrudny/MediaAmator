@@ -9,6 +9,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 // Components
 import Navbar from "./components/UI/Navbar.tsx";
 import ProductsList from "./components/pages/ShopList/ProductsList.tsx";
+import ProductDetails from "./components/pages/ShopList/ProductDetails.tsx";
 import LoginPanel from "./components/pages/LoginPanel/LoginPanel.tsx";
 import Register from "./components/pages/LoginPanel/Register.tsx";
 import AdminPanel from "./components/pages/AdminPanel/AdminPanel.tsx";
@@ -75,6 +76,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Navigate to="/shoplist" />} />
           <Route path="/shoplist" element={<ProductsList />} />
+          <Route path="/details" element={<ProductDetails />} />
           <Route path="/login" element={<LoginPanel />} />
           <Route path="/register" element={<Register />} />
           <Route path="/admin" element={<AdminPanel />} />

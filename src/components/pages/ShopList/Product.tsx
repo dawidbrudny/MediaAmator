@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 import { useAppDispatch } from "../../../redux/hooks";
 import { addOrRemoveFromCart } from "../../../redux/cartSlice";
 
@@ -5,6 +7,7 @@ import styled from "styled-components";
 import Button from "../../UI/Button";
 import Container from "../../UI/Container";
 import Headers from "../../UI/ChooseHeader";
+import { Commentary } from "./CommentarySection";
 
 export type ProductProps = {
   image: {
@@ -13,6 +16,7 @@ export type ProductProps = {
   };
   name: string;
   price: number;
+  commentaries?: Commentary[];
 };
 
 const Product = ({ image, name, price }: ProductProps) => {
@@ -32,7 +36,9 @@ const Product = ({ image, name, price }: ProductProps) => {
         <Price>{price.toFixed(2)} PLN</Price>
       </ProductInfo>
 
-      <MoreInfoButton>więcej...</MoreInfoButton>
+      <MoreInfoButton to="/details" state={{ image, name, price }}>
+        więcej...
+      </MoreInfoButton>
       <AddToCartButton onClick={handleAddToCart}>Do koszyka</AddToCartButton>
     </ProductContainer>
   );
@@ -75,17 +81,16 @@ const ProductInfo = styled.section`
 `;
 
 //  --- Buttons ---
-const MoreInfoButton = styled(Button)`
+const MoreInfoButton = styled(Link)`
   font-size: 14.5px;
-  border: 0;
-  background-color: transparent;
+  letter-spacing: 1px;
+  transition: 0.2s ease-in-out;
 
   &:hover {
     background-color: transparent;
     color: rgb(150, 0, 0);
     box-shadow: none;
     font-weight: bold;
-    letter-spacing: 1px;
   }
 `;
 
