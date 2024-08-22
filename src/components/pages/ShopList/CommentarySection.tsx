@@ -25,7 +25,6 @@ const CommentarySection = ({ commentaries, productName }: CommentarySectionProps
 
   async function handleDeleteComment(commentId: string, productName: string) {
     try {
-      console.log(commentId, productName);
       await deleteDoc(doc(db, "products", productName, "commentaries", commentId));
       window.location.reload();
     } catch (error) {
